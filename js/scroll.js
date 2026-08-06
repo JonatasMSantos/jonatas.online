@@ -24,7 +24,7 @@ function local(id, y) {
 
 export function update(dt, instant = false) {
   raw = scrollY;
-  smooth = instant ? raw : damp(smooth, raw, 0.09, dt);
+  smooth = instant ? raw : damp(smooth, raw, 0.13, dt);
   if (Math.abs(smooth - raw) < 0.3) smooth = raw;
   // Saltos longos (âncoras do nav): limita o atraso a 4 viewports.
   const maxLag = innerHeight * 4;

@@ -127,7 +127,7 @@ export async function buildHero(tier) {
   bust.position.x -= center.x;
   bust.position.z -= center.z;
   bust.position.y -= box.min.y;
-  bust.rotation.y = Math.PI + 0.12;
+  bust.rotation.y = 0.12;
   bust.traverse((o) => {
     if (o.isMesh) {
       o.frustumCulled = true;

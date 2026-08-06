@@ -82,11 +82,21 @@ async function initScene() {
 
   const rig = pathMod.createCameraRig();
 
-  // Aquecimento: compila tudo e renderiza 3 frames reais antes do reveal.
+  // Aquecimento: compila tudo e renderiza frames reais antes do reveal.
+  // Um frame de dentro do quarto força o upload das texturas dele para a
+  // GPU (senão o frustum culling adia o upload e a entrada na sala engasga).
   hero.group.visible = true;
   room.group.visible = true;
   if (ctx.renderer.compileAsync) await ctx.renderer.compileAsync(scene, camera);
-  for (let i = 0; i < 3; i++) ctx.composer.render();
+  camera.position.set(0.2, -29.9, -0.6);
+  camera.lookAt(0.9, -30.3, 1.9);
+  ctx.composer.render();
+  camera.position.set(0.75, -29.95, -1.55);
+  camera.lookAt(2.35, -30.37, 0.3);
+  ctx.composer.render();
+  camera.position.set(0, 1.5, 4.4);
+  camera.lookAt(0, 1.12, 0);
+  for (let i = 0; i < 2; i++) ctx.composer.render();
 
   world = { ...ctx, THREE, rig, hero, room, backdrop, dust: [dustHero, dustDive, dustRoom] };
   preloader.ready();
@@ -102,7 +112,6 @@ initScene().catch((err) => {
 
 preloader.onReveal(() => {
   revealed = true;
-  if (world) world.rig.anchor(performance.now() / 1000);
   const kicker = $('.hero-kicker');
   const name = $('.hero-name');
   const sub = $('.hero-sub');
@@ -141,9 +150,9 @@ function updateOverlay(progress, focus) {
       : `translateY(calc(-50% + ${(shift * 0.4).toFixed(1)}px)) translateX(${(dir * shift).toFixed(1)}px)`;
     p.el.style.filter = `blur(${((1 - f) * 6).toFixed(1)}px)`;
     p.el.style.pointerEvents = f > 0.5 ? 'auto' : 'none';
-    if (!p.seen && f > 0.45) {
+    if (!p.seen && f > 0.28) {
       p.seen = true;
-      revealText(p.body, { mode: 'words', stagger: 22, blur: 6, y: 8, tension: 150 });
+      revealText(p.body, { mode: 'words', stagger: 15, blur: 6, y: 8, tension: 170 });
     }
   }
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { ROOM_STOPS, ROOM_EXIT } from '../data/stops.js';
-import { clamp01, smoothstep, lerp } from '../springs.js';
+import { clamp01, smoothstep, lerp, damp } from '../springs.js';
 
 export const ROOM_ORIGIN = new THREE.Vector3(0, -31.45, 0);
 
@@ -70,8 +70,8 @@ function roomMap(p) {
     const dwell = ROOM_STOPS[i].dwell;
     const start = i + (1 - dwell);   // início do platô, em unidades
     const end = i + 1;               // fim do platô
-    const rise = smoothstep(start - 0.42, start - 0.06, x);
-    const fall = 1 - smoothstep(end + 0.06, end + 0.42, x);
+    const rise = smoothstep(start - 0.26, start - 0.03, x);
+    const fall = 1 - smoothstep(end + 0.03, end + 0.26, x);
     focus[i] = Math.min(rise, fall);
   }
 
@@ -84,15 +84,33 @@ const stopLooks = ROOM_STOPS.map((s) => toWorld(s.look));
 
 export function createCameraRig() {
   const pointer = { x: 0, y: 0, sx: 0, sy: 0, moved: false };
+  // Arrastar gira o busto no hero, com inércia e retorno lento à frente.
+  const drag = { active: false, lastX: 0, offset: 0, vel: 0 };
 
   addEventListener('pointermove', (e) => {
     pointer.x = (e.clientX / innerWidth) * 2 - 1;
     pointer.y = -(e.clientY / innerHeight) * 2 + 1;
     pointer.moved = true;
+    if (drag.active) {
+      const dx = e.clientX - drag.lastX;
+      drag.lastX = e.clientX;
+      drag.vel = dx * 0.005;
+      drag.offset += dx * 0.005;
+    }
   }, { passive: true });
 
+  addEventListener('pointerdown', (e) => {
+    if (e.target.closest && e.target.closest('a, button, .stop-panel, #nav, #menu')) return;
+    drag.active = true;
+    drag.lastX = e.clientX;
+    drag.vel = 0;
+    document.body.classList.add('grabbing');
+  }, { passive: true });
+  const endDrag = () => { drag.active = false; document.body.classList.remove('grabbing'); };
+  addEventListener('pointerup', endDrag, { passive: true });
+  addEventListener('pointercancel', endDrag, { passive: true });
+
   const state = { focus: new Array(ROOM_STOPS.length).fill(0), u: 0, inRoom: false };
-  let anchorT = 0;
   const heroLook = new THREE.Vector3(0, 1.12, 0);
   const exitLook = new THREE.Vector3(0, 1.3, 0);
 
@@ -109,12 +127,18 @@ export function createCameraRig() {
     let roll = 0;
 
     if (pDive <= 0 && pRoom <= 0) {
-      // Regime hero: órbita lenta com sway do ponteiro, dutch tilt sutil.
+      // Regime hero: balanço natural centrado no rosto + arrasto do usuário.
       // A saída interpola azimute/raio/altura (nunca em linha reta, que
       // atravessaria o busto quando a órbita está do lado oposto).
+      if (!drag.active) {
+        drag.offset += drag.vel;
+        drag.vel *= Math.pow(0.94, dt * 60);
+        const home = Math.round(drag.offset / (Math.PI * 2)) * Math.PI * 2;
+        drag.offset = damp(drag.offset, home, 0.012, dt);
+      }
       const exit = smoothstep(0.55, 0.98, pHero);
-      const azFree = 1.32 + (t - anchorT) * 0.1 + px * 0.45;
-      const az0 = Math.PI / 2;   // azimute do ponto de partida do mergulho
+      const az0 = Math.PI / 2;   // frente do busto e ponto de partida do mergulho
+      const azFree = az0 + Math.sin(t * 0.16) * 0.35 + px * 0.5 - drag.offset;
       let dAz = (azFree - az0) % (Math.PI * 2);
       if (dAz > Math.PI) dAz -= Math.PI * 2;
       if (dAz < -Math.PI) dAz += Math.PI * 2;
@@ -175,5 +199,5 @@ export function createCameraRig() {
     return state;
   }
 
-  return { update, state, pointer, anchor(t) { anchorT = t; } };
+  return { update, state, pointer };
 }
