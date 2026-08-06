@@ -1,0 +1,140 @@
+Jônatas Santos
+
+Desenvolvedor Fullstack Sênior · Java e JavaScript
+
+São Paulo, SP · (11) 95376-4769
+
+Email: jts.msantos@gmail.com
+
+LinkedIn: linkedin.com/in/jonatas-m-santos
+
+
+Resumo
+
+Mais de 12 anos construindo sistemas de ponta a ponta: comecei criando um ERP em Java, liderei sua migração completa para JavaScript e hoje atuo no setor bancário enquanto desenvolvo minha própria plataforma SaaS. Gosto de resolver o problema inteiro, do banco de dados à interface, sempre pensando em escalabilidade, manutenção e impacto real no negócio.
+
+Competências
+
+JavaScript e TypeScript: Node.js, NestJS, Angular, React, Next.js, React Native
+
+Java: Java EE, JSF (Primefaces), JPA, APIs REST (Jersey)
+
+Bancos de dados: SQL Server, PostgreSQL, MongoDB, Redis
+
+Infra e DevOps: Docker, CI/CD (Jenkins), Cloudflare, filas (BullMQ), monorepos
+
+Práticas: Scrum, DDD, SOLID, arquitetura hexagonal, microsserviços
+
+IA: Harness Engineering, Agents, Skills, Conceitos de funcionamento do LLM, Integração com players: Antropic e OpenAI.
+
+
+
+Segurança, Idempotência e Resiliência
+
+
+
+Segurança: Anti-enumeração, Facade, JWT, outros.
+
+Retry com Exponential Backoff e Jitter: Repetições automáticas de chamadas falhas com tempo de espera progressivo e aleatório, evitando a sobrecarga de sistemas em recuperação.
+
+Circuit Breaker: Bloqueio temporário de requisições a serviços instáveis, poupando recursos locais e dando tempo para a dependência falha se reestabelecer.
+
+Bulkhead: Isolamento de recursos e pools de conexão por módulo, garantindo que o esgotamento de um serviço específico não derrube a aplicação inteira.
+
+Timeout e Fallback: Interrupção controlada de requisições que excedem o tempo limite, acionando rotinas de contingência ou retornando respostas em cache.
+
+Rate Limiting e Load Shedding: Controle do tráfego de entrada e descarte proativo de requisições de menor prioridade durante picos extremos de sobrecarga.
+
+Chaves de Idempotência (UUIDs): Envio de identificadores únicos via cabeçalho HTTP, permitindo que o servidor reconheça e ignore retries sem duplicar transações ou cadastros.
+
+UPSERT e Optimistic Locking: Comandos de banco que inserem ou atualizam de forma atômica e controle por versionamento para garantir o mesmo estado final após múltiplas execuções.
+
+Deploy Progressivo (Canary e Blue-Green): Liberação gradual de novas funcionalidades para pequenos grupos de usuários, minimizando o raio de impacto de eventuais bugs em produção.
+
+Chaos Engineering: Injeção deliberada e controlada de falhas na infraestrutura para testar empiricamente os mecanismos de resiliência e auto-recuperação do software.
+
+Observabilidade Contínua (OpenTelemetry): Correlação de logs estruturados, métricas e tracing distribuído em tempo real para identificar gargalos e anomalias de forma proativa.
+
+Testes de Contrato (CDC): Validação automatizada em CI/CD das interfaces entre microsserviços integrados, garantindo que mudanças em uma API não quebrem seus consumidores.
+
+
+
+Principais Skills
+
+
+
+
+
+Fortes habilidades técnicas e conhecimento aprofundado em tecnologias relevantes.
+
+
+
+Capacidade de fornecer orientação e apoio.
+
+
+
+Visão estratégica para alinhar a tecnologia com os objetivos de negócio.
+
+
+
+Capacidade de resolver problemas complexos e tomar decisões técnicas sólidas.
+
+
+
+Conhecimento em metodologias ágeis e capacidade de aplicá-las efetivamente.
+
+
+
+Atitude proativa e foco em encontrar soluções eficientes.
+
+
+
+Flexibilidade para se adaptar a mudanças tecnológicas e de negócios.
+
+Experiência
+
+Bradesco · Analista de Sistemas Sênior
+
+set 2024 até o momento · Osasco, SP (híbrido)
+
+Desenvolvimento em sistemas críticos do setor financeiro, com alto rigor de segurança, disponibilidade e conformidade.
+
+Grupo Memorial · de Programador Júnior a Analista Sênior
+
+mai 2014 a ago 2024 · São Paulo, SP
+
+Dez anos de evolução na mesma empresa, saindo como responsável técnico do departamento.
+
+
+
+
+
+Entrei na equipe que construiu o ERP do zero em Java (JSF, JPA, SQL Server) e depois liderei sua migração para a stack JavaScript: Angular no frontend, NestJS no backend, em monorepo
+
+
+
+Orientação de equipe, definição de tecnologias, arquitetura e DevOps (Jenkins, CI/CD, servidores cloud)
+
+
+
+Integrações com Cielo, Itaú (CNAB), Iugu, Convenia, Active Directory e outras plataformas
+
+Freelancer · Desenvolvedor Java e Web
+
+2012 a 2014 · São Paulo
+
+Soluções web para pequenas e médias empresas com Java, AngularJS e Ionic.
+
+Projeto próprio
+
+Reporte.me: plataforma SaaS multi-tenant para PMEs brasileiras, com Kanban, formulários, LMS e gestão de projetos. Concepção, arquitetura e desenvolvimento completos com Next.js, NestJS, PostgreSQL, MongoDB, Redis e Cloudflare.
+
+Formação
+
+Análise e Desenvolvimento de Sistemas · Universidade Cruzeiro do Sul
+
+Idiomas e interesses
+
+Português nativo · Inglês Avançado.
+
+Nas horas livres: violão, gravação de música, eletrônica e IoT.

@@ -1,0 +1,224 @@
+/* ---------- Projetos ---------- */
+
+#projects {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(5, 6, 10, 0) 0%, var(--void) 9%, var(--void) 100%);
+  padding: 22vh 0 10vh;
+}
+
+.projects-head {
+  max-width: 78rem;
+  margin: 0 auto 14vh;
+  padding: 0 4rem;
+}
+
+.projects-eyebrow {
+  font-size: 0.8125rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1rem;
+}
+
+.projects-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 4.6rem;
+  line-height: 0.95;
+}
+
+.project {
+  position: relative;
+  max-width: 78rem;
+  margin: 0 auto 22vh;
+  padding: 0 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+  gap: 4rem;
+  align-items: center;
+}
+
+.project-flip { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); }
+.project-flip .project-info { order: 2; }
+.project-flip .project-media { order: 1; }
+
+.project-num {
+  position: absolute;
+  top: -0.18em;
+  left: 1.2rem;
+  font-family: var(--serif);
+  font-size: 16rem;
+  line-height: 1;
+  color: rgba(242, 243, 247, 0.05);
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+}
+
+.project-info { position: relative; }
+
+.project-name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 0.8rem;
+}
+
+.project-role {
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.4rem;
+}
+
+.project-body {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin-bottom: 1.4rem;
+  max-width: 26rem;
+}
+
+.project-stack {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 243, 247, 0.45);
+  margin-bottom: 2rem;
+}
+
+.project-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ink);
+}
+.project-visit svg { width: 1.4rem; transition: transform 250ms var(--ease-entrance); }
+.project-visit:hover svg { transform: translateX(0.25rem); }
+
+.project-media {
+  position: relative;
+  min-height: 30rem;
+}
+
+.shot {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid var(--hairline-soft);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+  background: #0c0e14;
+  will-change: transform;
+}
+.shot img { width: 100%; height: 100%; object-fit: cover; transition: filter 250ms var(--ease-entrance); }
+.shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 30%);
+  pointer-events: none;
+}
+.shot:hover img { filter: brightness(1.08); }
+
+.shot-a { left: 0; top: 8%; width: 74%; z-index: 2; }
+.shot-b { right: 0; top: 0; width: 44%; z-index: 1; opacity: 0.95; }
+.shot-c { right: 6%; bottom: 0; width: 40%; z-index: 3; }
+.shot-phone {
+  right: 4%; bottom: 0; width: 24%;
+  z-index: 3;
+  border-radius: 1.4rem;
+  border: 1px solid var(--hairline);
+}
+
+.project-wide { grid-template-columns: minmax(0, 24rem) minmax(0, 1fr); }
+.shot-wide { position: relative; width: 100%; }
+.project-wide .project-media { min-height: 0; }
+.shot-wide img { will-change: transform; }
+
+/* ---------- Contato ---------- */
+
+#contact {
+  position: relative;
+  z-index: 2;
+  background: var(--void);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 14vh 2rem 0;
+}
+
+.contact-eyebrow {
+  font-size: 0.8125rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.4rem;
+}
+
+.contact-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 6rem;
+  line-height: 0.95;
+  margin-bottom: 3rem;
+}
+
+.contact-mail {
+  font-size: 1.4rem;
+  font-weight: 300;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.4rem;
+  transition: border-color 250ms var(--ease-entrance), color 250ms var(--ease-entrance);
+}
+.contact-mail:hover { color: var(--amber); border-color: var(--amber); }
+
+.contact-meta {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.6rem;
+  font-size: 0.875rem;
+  color: var(--ink-dim);
+}
+.contact-meta a:hover { color: var(--ink); }
+
+#contact footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 2rem 0 2.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(242, 243, 247, 0.35);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 1023px) {
+  .project, .project-flip, .project-wide {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-bottom: 16vh;
+  }
+  .project-flip .project-info { order: 1; }
+  .project-flip .project-media { order: 2; }
+  .project-media { min-height: 24rem; }
+  .project-num { font-size: 10rem; }
+}
+
+@media (max-width: 767px) {
+  .projects-head, .project { padding: 0 1.5rem; }
+  .projects-title { font-size: 3.2rem; }
+  .contact-title { font-size: 3.4rem; }
+  .contact-mail { font-size: 1.05rem; }
+  .contact-meta { flex-direction: column; gap: 0.8rem; }
+  .project-media { min-height: 19rem; }
+}

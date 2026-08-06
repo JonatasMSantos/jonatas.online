@@ -1,0 +1,82 @@
+:root {
+  --void: #05060a;
+  --ink: #f2f3f7;
+  --ink-dim: rgba(242, 243, 247, 0.62);
+  --amber: #d9a05b;
+  --panel: rgba(16, 18, 26, 0.55);
+  --panel-strong: rgba(8, 9, 14, 0.72);
+  --hairline: rgba(255, 255, 255, 0.14);
+  --hairline-soft: rgba(255, 255, 255, 0.08);
+  --pre-surface: #e6e6e6;
+  --pre-ink: #171717;
+  --serif: "Instrument Serif", Georgia, serif;
+  --sans: "General Sans", system-ui, -apple-system, sans-serif;
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+}
+
+html { font-size: 16px; }
+@media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+@media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+@media (max-width: 1024px) { html { font-size: 1.5625vw; } }
+@media (max-width: 640px)  { html { font-size: 4.444444vw; } }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
+::selection { background: rgba(217, 160, 91, 0.35); }
+
+#gl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+
+main { position: relative; z-index: 1; }
+
+section { position: relative; }
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#hero { height: 280vh; }
+#dive { height: 140vh; }
+#room { height: 780vh; }
+
+html.reduced-motion #hero { height: 120vh; }
+html.reduced-motion #dive { height: 60vh; }
+html.reduced-motion #room { height: 320vh; }
+
+/* Fallback sem WebGL: tudo legível em fluxo */
+html.no-webgl #gl { display: none; }
+html.no-webgl body {
+  background:
+    radial-gradient(120% 90% at 50% 0%, #14161f 0%, var(--void) 60%);
+}
+html.no-webgl #hero, html.no-webgl #dive, html.no-webgl #room { height: auto; }
+html.no-webgl .pin { position: static; height: auto; overflow: visible; pointer-events: auto; }
+html.no-webgl .stop-panel { position: static !important; opacity: 1 !important; filter: none !important; transform: none !important; margin: 12vh auto; }
+html.no-webgl .hero-copy, html.no-webgl .dive-line { opacity: 1 !important; filter: none !important; transform: none !important; }
+html.no-webgl .hero-hint { display: none; }

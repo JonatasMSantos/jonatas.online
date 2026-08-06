@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Jônatas Santos · Desenvolvedor Fullstack Sênior</title>
+  <meta name="description" content="Java e JavaScript. Doze anos construindo sistemas de ponta a ponta, do banco de dados à interface." />
+  <meta property="og:title" content="Jônatas Santos · Desenvolvedor Fullstack Sênior" />
+  <meta property="og:description" content="Java e JavaScript. Doze anos construindo sistemas de ponta a ponta." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#05060a" />
+
+  <script>
+    (function () {
+      var lang = 'pt';
+      try { lang = localStorage.getItem('jo.lang') || 'pt'; } catch (e) {}
+      if (lang !== 'en') lang = 'pt';
+      document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+      document.documentElement.dataset.lang = lang;
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600&display=swap" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+
+  <script type="importmap">
+  { "imports": {
+    "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+  } }
+  </script>
+</head>
+<body>
+
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <header id="nav" aria-label="Navegação">
+    <div class="nav-pill">
+      <a class="nav-brand" href="#hero" data-nav="hero">Jônatas.</a>
+      <nav class="nav-links">
+        <a href="#hero" data-nav="hero" data-i18n="nav.inicio">Início</a>
+        <a href="#room" data-nav="room" data-i18n="nav.sala">Sala</a>
+        <a href="#projects" data-nav="projects" data-i18n="nav.projetos">Projetos</a>
+        <a href="#contact" data-nav="contact" data-i18n="nav.contato">Contato</a>
+      </nav>
+      <div class="nav-side">
+        <button id="lang-toggle" type="button" aria-label="Idioma">
+          <span data-lang-opt="pt">PT</span><i>·</i><span data-lang-opt="en">EN</span>
+        </button>
+        <button id="burger" type="button" aria-label="Menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="menu" aria-hidden="true">
+    <button id="menu-close" type="button" aria-label="Fechar">×</button>
+    <nav>
+      <a href="#hero" data-nav="hero" data-i18n="nav.inicio">Início</a>
+      <a href="#room" data-nav="room" data-i18n="nav.sala">Sala</a>
+      <a href="#projects" data-nav="projects" data-i18n="nav.projetos">Projetos</a>
+      <a href="#contact" data-nav="contact" data-i18n="nav.contato">Contato</a>
+    </nav>
+    <a class="menu-mail" href="mailto:jts.msantos@gmail.com">jts.msantos@gmail.com</a>
+  </div>
+
+  <main>
+    <section id="hero">
+      <div class="pin">
+        <div class="hero-copy">
+          <p class="hero-kicker reveal-letters" data-i18n="hero.kicker">Desenvolvedor Fullstack Sênior</p>
+          <h1 class="hero-name reveal-letters">Jônatas Santos</h1>
+          <p class="hero-sub reveal-words" data-i18n="hero.sub">Java e JavaScript. Doze anos construindo sistemas de ponta a ponta, do banco de dados à interface.</p>
+        </div>
+        <div class="hero-hint">
+          <span data-i18n="hero.hint">role para entrar</span>
+          <i class="hint-line"></i>
+        </div>
+      </div>
+    </section>
+
+    <section id="dive">
+      <div class="pin">
+        <p class="dive-line" data-i18n="dive.line">A tecnologia muda. O ofício permanece.</p>
+      </div>
+    </section>
+
+    <section id="room">
+      <div class="pin">
+        <article class="stop-panel" data-stop="fullstack" data-side="left">
+          <p class="stop-kicker" data-i18n="room.fullstack.kicker">01 · Fullstack</p>
+          <h2 class="stop-title" data-i18n="room.fullstack.title">Do banco de dados à interface</h2>
+          <p class="stop-body" data-i18n="room.fullstack.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.fullstack.tags"></p>
+        </article>
+        <article class="stop-panel" data-stop="ai" data-side="left">
+          <p class="stop-kicker" data-i18n="room.ai.kicker">02 · Inteligência Artificial</p>
+          <h2 class="stop-title" data-i18n="room.ai.title">Agentes que trabalham junto</h2>
+          <p class="stop-body" data-i18n="room.ai.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.ai.tags"></p>
+        </article>
+        <article class="stop-panel" data-stop="infra" data-side="right">
+          <p class="stop-kicker" data-i18n="room.infra.kicker">03 · Infra e Resiliência</p>
+          <h2 class="stop-title" data-i18n="room.infra.title">Sistemas que não caem</h2>
+          <p class="stop-body" data-i18n="room.infra.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.infra.tags"></p>
+        </article>
+        <article class="stop-panel" data-stop="arch" data-side="left">
+          <p class="stop-kicker" data-i18n="room.arch.kicker">04 · Arquitetura</p>
+          <h2 class="stop-title" data-i18n="room.arch.title">Decisões que envelhecem bem</h2>
+          <p class="stop-body" data-i18n="room.arch.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.arch.tags"></p>
+        </article>
+        <article class="stop-panel" data-stop="iot" data-side="right">
+          <p class="stop-kicker" data-i18n="room.iot.kicker">05 · Eletrônica e IoT</p>
+          <h2 class="stop-title" data-i18n="room.iot.title">Hardware nas horas vagas</h2>
+          <p class="stop-body" data-i18n="room.iot.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.iot.tags"></p>
+        </article>
+        <article class="stop-panel" data-stop="music" data-side="right">
+          <p class="stop-kicker" data-i18n="room.music.kicker">06 · Música</p>
+          <h2 class="stop-title" data-i18n="room.music.title">Violão e gravação</h2>
+          <p class="stop-body" data-i18n="room.music.body"></p>
+          <p class="stop-tags" data-i18n-tags="room.music.tags"></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="projects">
+      <header class="projects-head">
+        <p class="projects-eyebrow" data-i18n="projects.eyebrow">Trabalho selecionado</p>
+        <h2 class="projects-title" data-i18n="projects.heading">Projetos</h2>
+      </header>
+
+      <article class="project" id="p-reporte">
+        <span class="project-num" aria-hidden="true">01</span>
+        <div class="project-info">
+          <h3 class="project-name">Reporte.me</h3>
+          <p class="project-role" data-i18n="projects.reporte.role">SaaS próprio · da concepção ao deploy</p>
+          <p class="project-body" data-i18n="projects.reporte.body"></p>
+          <p class="project-stack">Next.js · NestJS · PostgreSQL · MongoDB · Redis · Cloudflare</p>
+          <a class="project-visit" href="https://reporte.me" target="_blank" rel="noopener">
+            <span data-i18n="projects.visit">visitar</span>
+            <svg viewBox="0 0 22.5 7.364" aria-hidden="true"><path fill="currentColor" d="M22.3536 4.03553C22.5488 3.84027 22.5488 3.52369 22.3536 3.32843L19.1716 0.146447C18.9763 -0.0488155 18.6597 -0.0488155 18.4645 0.146447C18.2692 0.341709 18.2692 0.658291 18.4645 0.853554L21.2929 3.68198L18.4645 6.51041C18.2692 6.70567 18.2692 7.02225 18.4645 7.21751C18.6597 7.41278 18.9763 7.41278 19.1716 7.21751L22.3536 4.03553ZM0 3.68198V4.18198H22V3.68198V3.18198H0V3.68198Z"/></svg>
+          </a>
+        </div>
+        <div class="project-media">
+          <figure class="shot shot-a tilt" data-parallax="0.05"><img src="assets/img/reporte/tasks.webp" alt="Reporte.me, quadro kanban" loading="lazy" /></figure>
+          <figure class="shot shot-b" data-parallax="0.11"><img src="assets/img/reporte/forms-1.webp" alt="Reporte.me, construtor de formulários" loading="lazy" /></figure>
+          <figure class="shot shot-c" data-parallax="0.17"><img src="assets/img/reporte/note.webp" alt="Reporte.me, editor de notas" loading="lazy" /></figure>
+        </div>
+      </article>
+
+      <article class="project project-flip" id="p-pagaoupassa">
+        <span class="project-num" aria-hidden="true">02</span>
+        <div class="project-info">
+          <h3 class="project-name">Pagaoupassa</h3>
+          <p class="project-role" data-i18n="projects.pagaoupassa.role">Jogo de tabuleiro online</p>
+          <p class="project-body" data-i18n="projects.pagaoupassa.body"></p>
+          <p class="project-stack">JavaScript · WebGL · Realtime</p>
+          <a class="project-visit" href="https://pagaoupassa.com" target="_blank" rel="noopener">
+            <span data-i18n="projects.visit">visitar</span>
+            <svg viewBox="0 0 22.5 7.364" aria-hidden="true"><path fill="currentColor" d="M22.3536 4.03553C22.5488 3.84027 22.5488 3.52369 22.3536 3.32843L19.1716 0.146447C18.9763 -0.0488155 18.6597 -0.0488155 18.4645 0.146447C18.2692 0.341709 18.2692 0.658291 18.4645 0.853554L21.2929 3.68198L18.4645 6.51041C18.2692 6.70567 18.2692 7.02225 18.4645 7.21751C18.6597 7.41278 18.9763 7.41278 19.1716 7.21751L22.3536 4.03553ZM0 3.68198V4.18198H22V3.68198V3.18198H0V3.68198Z"/></svg>
+          </a>
+        </div>
+        <div class="project-media">
+          <figure class="shot shot-a tilt" data-parallax="0.05"><img src="assets/img/pagaoupassa/tabuleiro3D-player.webp" alt="Pagaoupassa, tabuleiro 3D" loading="lazy" /></figure>
+          <figure class="shot shot-b" data-parallax="0.11"><img src="assets/img/pagaoupassa/landing-page.webp" alt="Pagaoupassa, página inicial" loading="lazy" /></figure>
+          <figure class="shot shot-phone" data-parallax="0.17"><img src="assets/img/pagaoupassa/player-configs.webp" alt="Pagaoupassa, configuração de jogador" loading="lazy" /></figure>
+        </div>
+      </article>
+
+      <article class="project project-wide" id="p-medeligne">
+        <span class="project-num" aria-hidden="true">03</span>
+        <div class="project-info">
+          <h3 class="project-name">Medeligne</h3>
+          <p class="project-role" data-i18n="projects.medeligne.role">Landing page de moda</p>
+          <p class="project-body" data-i18n="projects.medeligne.body"></p>
+          <p class="project-stack">Design · Frontend</p>
+          <a class="project-visit" href="https://medeligne.com" target="_blank" rel="noopener">
+            <span data-i18n="projects.visit">visitar</span>
+            <svg viewBox="0 0 22.5 7.364" aria-hidden="true"><path fill="currentColor" d="M22.3536 4.03553C22.5488 3.84027 22.5488 3.52369 22.3536 3.32843L19.1716 0.146447C18.9763 -0.0488155 18.6597 -0.0488155 18.4645 0.146447C18.2692 0.341709 18.2692 0.658291 18.4645 0.853554L21.2929 3.68198L18.4645 6.51041C18.2692 6.70567 18.2692 7.02225 18.4645 7.21751C18.6597 7.41278 18.9763 7.41278 19.1716 7.21751L22.3536 4.03553ZM0 3.68198V4.18198H22V3.68198V3.18198H0V3.68198Z"/></svg>
+          </a>
+        </div>
+        <div class="project-media">
+          <figure class="shot shot-wide"><img src="assets/img/medeligne/landing.webp" alt="Medeligne, landing page" loading="lazy" /></figure>
+        </div>
+      </article>
+    </section>
+
+    <section id="contact">
+      <div class="contact-inner">
+        <p class="contact-eyebrow" data-i18n="contact.eyebrow">Próximo projeto</p>
+        <h2 class="contact-title" data-i18n="contact.title">Vamos conversar</h2>
+        <a class="contact-mail" href="mailto:jts.msantos@gmail.com">jts.msantos@gmail.com</a>
+        <div class="contact-meta">
+          <a href="https://linkedin.com/in/jonatas-m-santos" target="_blank" rel="noopener">linkedin.com/in/jonatas-m-santos</a>
+          <span>São Paulo, SP</span>
+        </div>
+      </div>
+      <footer>
+        <span data-i18n="footer.line">© 2026 Jônatas Santos. Feito à mão com Three.js.</span>
+      </footer>
+    </section>
+  </main>
+
+  <div id="preloader" aria-hidden="true">
+    <p class="pre-brand">Jônatas.</p>
+    <div class="pre-square">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M50 0.5 H99.5 V99.5 H0.5 V0.5 H50" pathLength="1" />
+      </svg>
+      <span class="pre-count">0%</span>
+    </div>
+  </div>
+
+  <div id="cursor" aria-hidden="true"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
