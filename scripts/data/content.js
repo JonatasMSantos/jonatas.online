@@ -7,7 +7,8 @@ export const DICT = {
       title: 'Jônatas Santos · Desenvolvedor Fullstack Sênior',
       desc: 'Java e JavaScript. Doze anos construindo sistemas de ponta a ponta, do banco de dados à interface.',
     },
-    nav: { inicio: 'Início', sala: 'Sala', projetos: 'Projetos', contato: 'Contato' },
+    nav: { inicio: 'Início', sala: 'Sala', experiencia: 'Experiência', projetos: 'Projetos', contato: 'Contato' },
+    next: { aria: 'Próxima seção' },
     hero: {
       kicker: 'Desenvolvedor Fullstack Sênior',
       sub: 'Java e JavaScript. Doze anos construindo sistemas de ponta a ponta, do banco de dados à interface.',
@@ -106,7 +107,8 @@ export const DICT = {
       title: 'Jônatas Santos · Senior Fullstack Developer',
       desc: 'Java and JavaScript. Twelve years building systems end to end, from database to interface.',
     },
-    nav: { inicio: 'Home', sala: 'Room', projetos: 'Projects', contato: 'Contact' },
+    nav: { inicio: 'Home', sala: 'Room', experiencia: 'Experience', projetos: 'Projects', contato: 'Contact' },
+    next: { aria: 'Next section' },
     hero: {
       kicker: 'Senior Fullstack Developer',
       sub: 'Java and JavaScript. Twelve years building systems end to end, from database to interface.',

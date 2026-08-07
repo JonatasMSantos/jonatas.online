@@ -1,7 +1,7 @@
 import { TIER } from './tier.js';
 import { stepSprings, clamp01, smoothstep, lerp } from './springs.js';
 import * as scroll from './scroll.js';
-import { apply as i18nApply, toggle as i18nToggle } from './i18n.js';
+import { apply as i18nApply, toggle as i18nToggle, t } from './i18n.js';
 import { startPreloader } from './preloader.js';
 import { initCursor } from './cursor.js';
 import { revealText, revealBlock } from './reveal.js';
@@ -110,7 +110,7 @@ initScene().catch((err) => {
 
 // ---------- Reveal pós-preloader ----------
 
-preloader.onReveal(async () => {
+preloader.onReveal(() => {
   revealed = true;
   const kicker = $('.hero-kicker');
   const name = $('.hero-name');
@@ -123,16 +123,26 @@ preloader.onReveal(async () => {
     revealText(sub, { mode: 'words', stagger: 34, delay: 700, blur: 8, y: 12, tension: 130 });
     hintRevealAt = performance.now() + 1400;
     revealBlock($('#nav'), { delay: 250, y: -12, blur: 0, tension: 90, friction: 22 });
+    setTimeout(() => nextBtn.classList.add('ready'), 1200);
   }, 60);
-
-  // Inicializa a cena isolada da seção de experiência
-  try {
-    const { initExperience3D } = await import('./scene/experience.js');
-    initExperience3D('experience-gl', 'assets/3dmodels/boneto-jonatas.min.glb');
-  } catch (err) {
-    console.error('Erro ao iniciar modelo 3D da timeline', err);
-  }
 });
+
+// ---------- Cena isolada da seção Experiência (lazy) ----------
+
+// O modelo só é baixado quando a seção se aproxima do viewport; a própria
+// cena pausa o render quando sai de tela (ver scene/experience.js).
+const expMedia = document.getElementById('experience-gl');
+if (expMedia) {
+  const io = new IntersectionObserver((entries) => {
+    if (!entries.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    if (document.documentElement.classList.contains('no-webgl')) return;
+    import('./scene/experience.js')
+      .then(({ initExperience3D }) => initExperience3D('experience-gl', 'assets/3dmodels/boneto-jonatas.min.glb', TIER))
+      .catch((err) => console.error('Erro ao iniciar o modelo 3D da experiência', err));
+  }, { rootMargin: '200% 0px' });
+  io.observe(expMedia);
+}
 
 // ---------- Painéis das paradas + linha do mergulho ----------
 
@@ -185,9 +195,11 @@ const parallaxEls = $$('[data-parallax]').map((el) => ({ el, f: parseFloat(el.da
 const numEls = $$('.project-num').map((el) => ({ el, center: 0 }));
 const wideImg = $('.shot-wide img');
 const clampPx = (v, m) => Math.max(-m, Math.min(m, v));
+let projectsTop = 0;
 
 function measureProjects() {
   const base = $('#projects').offsetTop;
+  projectsTop = base;
   const centerOf = (el) => {
     const article = el.closest('.project');
     return base + article.offsetTop + article.offsetHeight / 2;
@@ -197,6 +209,8 @@ function measureProjects() {
 }
 
 function updateProjects() {
+  // Longe dos projetos não há nada a animar: evita leituras de layout por frame.
+  if (scrollY + innerHeight < projectsTop) return;
   const mid = scrollY + innerHeight / 2;
   for (const { el, f, center } of parallaxEls) {
     el.style.transform = `translateY(${clampPx((center - mid) * f, 90).toFixed(1)}px)`;
@@ -235,18 +249,43 @@ if (TIER.fine) {
   });
 }
 
-// ---------- Nav ativa ----------
+// ---------- Nav ativa + botão de próxima seção ----------
 
+const NAV_ORDER = ['hero', 'room', 'experience', 'projects', 'contact'];
+const NAV_KEY = { hero: 'inicio', room: 'sala', experience: 'experiencia', projects: 'projetos', contact: 'contato' };
 const navLinks = $$('.nav-links a');
+const nextBtn = $('#next-section');
+const nextLabel = nextBtn.querySelector('.next-label');
+let activeSection = '';
+let nextState = null;
+
+nextBtn.addEventListener('click', () => {
+  if (nextBtn.dataset.next) goTo(nextBtn.dataset.next);
+});
+
 function updateNav() {
   const y = scrollY + innerHeight * 0.5;
-  const ids = ['hero', 'room', 'projects', 'contact'];
   let active = 'hero';
-  for (const id of ids) {
-    const el = document.getElementById(id);
-    if (y >= el.offsetTop) active = id === 'dive' ? active : id;
+  for (const id of NAV_ORDER) {
+    if (y >= document.getElementById(id).offsetTop) active = id;
   }
-  navLinks.forEach((a) => a.classList.toggle('active', a.dataset.nav === active));
+  if (active !== activeSection) {
+    activeSection = active;
+    navLinks.forEach((a) => a.classList.toggle('active', a.dataset.nav === active));
+  }
+
+  // O botão aponta sempre para a seção seguinte; some na última.
+  const next = NAV_ORDER[NAV_ORDER.indexOf(active) + 1] || '';
+  const label = next && t('nav.' + NAV_KEY[next]);
+  if (label !== nextState) {
+    nextState = label;
+    nextBtn.classList.toggle('gone', !next);
+    nextBtn.dataset.next = next;
+    if (next) {
+      nextLabel.textContent = label;
+      nextBtn.setAttribute('aria-label', `${t('next.aria')}: ${label}`);
+    }
+  }
 }
 
 // ---------- Debug ----------
