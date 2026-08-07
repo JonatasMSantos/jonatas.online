@@ -124,5 +124,18 @@ export function buildProps() {
   blob(-2.0, -1.75, 0.6, 0.55);    // caixote
   blob(2.6, -1.72, 0.55, 0.55);    // planta
 
-  return { group };
+  let frameLight;
+
+  return { 
+    group,
+    setFocus(f) {
+      if (!frameLight && f > 0.1) {
+        frameLight = new THREE.PointLight('#ffffff', 0, 1.5, 2);
+        frameLight.position.set(-0.75, 1.72, 1.9);
+        group.add(frameLight);
+      }
+      if (frameLight) frameLight.intensity = f * 2.0;
+      art.material.color.setScalar(1 + f * 1.5);
+    }
+  };
 }

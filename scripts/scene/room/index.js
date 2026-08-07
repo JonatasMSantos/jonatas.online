@@ -65,10 +65,11 @@ export function buildRoom(tier) {
   });
 
   const hooks = {
+    intro: (f) => props.setFocus(f),
+    arch: (f) => shelf.setFocus(f),
     fullstack: (f) => { desk.screens.m1.color.setScalar(0.8 + f * 0.5); desk.glow.intensity = 1.6 + f * 1.6; },
     ai: (f) => { term.setFocus(f); desk.screens.m2.color.setScalar(0.8 + f * 0.55); },
     infra: (f) => rack.setFocus(f),
-    arch: (f) => shelf.setFocus(f),
     iot: (f) => bench.setFocus(f),
     music: (f) => guitar.setFocus(f),
   };
