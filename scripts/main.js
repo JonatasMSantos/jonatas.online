@@ -110,7 +110,7 @@ initScene().catch((err) => {
 
 // ---------- Reveal pós-preloader ----------
 
-preloader.onReveal(() => {
+preloader.onReveal(async () => {
   revealed = true;
   const kicker = $('.hero-kicker');
   const name = $('.hero-name');
@@ -124,6 +124,14 @@ preloader.onReveal(() => {
     hintRevealAt = performance.now() + 1400;
     revealBlock($('#nav'), { delay: 250, y: -12, blur: 0, tension: 90, friction: 22 });
   }, 60);
+
+  // Inicializa a cena isolada da seção de experiência
+  try {
+    const { initExperience3D } = await import('./scene/experience.js');
+    initExperience3D('experience-gl', TIER.modelUrl);
+  } catch (err) {
+    console.error('Erro ao iniciar modelo 3D da timeline', err);
+  }
 });
 
 // ---------- Painéis das paradas + linha do mergulho ----------

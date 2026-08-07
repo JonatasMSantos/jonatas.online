@@ -58,6 +58,25 @@ export const DICT = {
         tags: ['Violão', 'Gravação', 'Home studio'],
       },
     },
+    experience: {
+      eyebrow: 'Trajetória',
+      heading: 'Experiência',
+      bradesco: {
+        role: 'Bradesco · Analista de Sistemas Sênior',
+        date: 'set 2024 até o momento · Osasco, SP (híbrido)',
+        body: 'Desenvolvimento em sistemas críticos do setor financeiro, com alto rigor de segurança, disponibilidade e conformidade.',
+      },
+      memorial: {
+        role: 'Grupo Memorial · de Programador Júnior a Analista Sênior',
+        date: 'mai 2014 a ago 2024 · São Paulo, SP',
+        body: 'Dez anos de evolução na mesma empresa, saindo como responsável técnico do departamento. Entrei na equipe que construiu o ERP do zero em Java (JSF, JPA, SQL Server) e depois liderei sua migração para a stack JavaScript: Angular no frontend, NestJS no backend, em monorepo.\nOrientação de equipe, definição de tecnologias, arquitetura e DevOps (Jenkins, CI/CD, servidores cloud).\nIntegrações com Cielo, Itaú (CNAB), Iugu, Convenia, Active Directory e outras plataformas.',
+      },
+      freelance: {
+        role: 'Freelancer · Desenvolvedor Java e Web',
+        date: '2012 a 2014 · São Paulo',
+        body: 'Soluções web para pequenas e médias empresas com Java, AngularJS e Ionic.',
+      },
+    },
     projects: {
       eyebrow: 'Trabalho selecionado',
       heading: 'Projetos',
@@ -136,6 +155,25 @@ export const DICT = {
         title: 'Guitar and recording',
         body: 'Steel strings, tone and home recording. The creative counterpoint that teaches listening, rhythm and patience.',
         tags: ['Guitar', 'Recording', 'Home studio'],
+      },
+    },
+    experience: {
+      eyebrow: 'Career Path',
+      heading: 'Experience',
+      bradesco: {
+        role: 'Bradesco · Senior Systems Analyst',
+        date: 'Sep 2024 - Present · Osasco, SP (Hybrid)',
+        body: 'Development of critical systems in the financial sector, with high rigor in security, availability, and compliance.',
+      },
+      memorial: {
+        role: 'Grupo Memorial · From Junior Programmer to Senior Analyst',
+        date: 'May 2014 - Aug 2024 · São Paulo, SP',
+        body: 'Ten years of evolution in the same company, leaving as technical lead of the department. Joined the team that built the ERP from scratch in Java (JSF, JPA, SQL Server) and later led its migration to the JavaScript stack: Angular on the frontend, NestJS on the backend, in a monorepo. Team mentoring, technology definition, architecture, and DevOps (Jenkins, CI/CD, cloud servers). Integrations with Cielo, Itaú (CNAB), Iugu, Convenia, Active Directory, and other platforms.',
+      },
+      freelance: {
+        role: 'Freelancer · Java & Web Developer',
+        date: '2012 - 2014 · São Paulo',
+        body: 'Web solutions for small and medium businesses using Java, AngularJS, and Ionic.',
       },
     },
     projects: {
