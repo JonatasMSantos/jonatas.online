@@ -16,25 +16,25 @@ export const DICT = {
     dive: { line: 'A tecnologia muda. O ofício permanece.' },
     room: {
       fullstack: {
-        kicker: '01 · Fullstack',
+        kicker: '02 · Fullstack',
         title: 'Do banco de dados à interface',
         body: 'Doze anos resolvendo o problema inteiro: Java no núcleo, TypeScript na ponta. Node, NestJS, Angular, React e Next.js em produção, hoje em sistemas críticos do setor bancário no Bradesco.',
         tags: ['Java', 'TypeScript', 'NestJS', 'Angular', 'Next.js'],
       },
       ai: {
-        kicker: '02 · Inteligência Artificial',
+        kicker: '03 · Inteligência Artificial',
         title: 'Agentes que trabalham junto',
         body: 'Harness engineering, agents e skills no fluxo de trabalho diário. Integração com Anthropic e OpenAI, e o entendimento de como um LLM funciona por dentro.',
         tags: ['Agents', 'Skills', 'Anthropic', 'OpenAI'],
       },
       infra: {
-        kicker: '03 · Infra e Resiliência',
+        kicker: '04 · Infra e Resiliência',
         title: 'Sistemas que não caem',
         body: 'Docker, CI/CD com Jenkins, filas com BullMQ e Cloudflare. Circuit breaker, retry com backoff e jitter, bulkhead, idempotência, canary e chaos engineering: resiliência como disciplina, não como acaso.',
         tags: ['Docker', 'CI/CD', 'BullMQ', 'Cloudflare', 'OpenTelemetry'],
       },
       arch: {
-        kicker: '04 · Arquitetura',
+        kicker: '01 · Arquitetura',
         title: 'Decisões que envelhecem bem',
         body: 'DDD, SOLID, arquitetura hexagonal e microsserviços. Dez anos no Grupo Memorial: do ERP construído em Java à migração completa para Angular e NestJS, como responsável técnico do departamento.',
         tags: ['DDD', 'SOLID', 'Hexagonal', 'Microsserviços'],
@@ -90,25 +90,25 @@ export const DICT = {
     dive: { line: 'Technology changes. Craft remains.' },
     room: {
       fullstack: {
-        kicker: '01 · Fullstack',
+        kicker: '02 · Fullstack',
         title: 'From database to interface',
         body: 'Twelve years solving the whole problem: Java at the core, TypeScript at the edge. Node, NestJS, Angular, React and Next.js in production, now on critical banking systems at Bradesco.',
         tags: ['Java', 'TypeScript', 'NestJS', 'Angular', 'Next.js'],
       },
       ai: {
-        kicker: '02 · Artificial Intelligence',
+        kicker: '03 · Artificial Intelligence',
         title: 'Agents that work alongside',
         body: 'Harness engineering, agents and skills in the daily workflow. Anthropic and OpenAI integrations, plus a working grasp of how an LLM behaves inside.',
         tags: ['Agents', 'Skills', 'Anthropic', 'OpenAI'],
       },
       infra: {
-        kicker: '03 · Infra and Resilience',
+        kicker: '04 · Infra and Resilience',
         title: 'Systems that stay up',
         body: 'Docker, CI/CD with Jenkins, queues with BullMQ and Cloudflare. Circuit breaker, retry with backoff and jitter, bulkhead, idempotency, canary and chaos engineering: resilience as a discipline, not luck.',
         tags: ['Docker', 'CI/CD', 'BullMQ', 'Cloudflare', 'OpenTelemetry'],
       },
       arch: {
-        kicker: '04 · Architecture',
+        kicker: '01 · Architecture',
         title: 'Decisions that age well',
         body: 'DDD, SOLID, hexagonal architecture and microservices. Ten years at Grupo Memorial: from an ERP built in Java to its full migration to Angular and NestJS, as technical lead.',
         tags: ['DDD', 'SOLID', 'Hexagonal', 'Microservices'],
