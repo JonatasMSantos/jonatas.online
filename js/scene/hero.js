@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { RING_A, RING_B } from '../data/skills.js';
-import { makeShaft } from './backdrop.js';
 
 const AMBER = '#d9a05b';
 const PIVOT = new THREE.Vector3(0, 1.12, 0);
@@ -90,28 +89,49 @@ function makeRing({ rx, rz, tilt, labels, labelStart }) {
 export async function buildHero(tier) {
   const group = new THREE.Group();
 
-  // Luzes do hero: um facho teatral de cima, preenchimento frio, aro traseiro.
-  group.add(new THREE.AmbientLight(0xffffff, 0.22));
-  const hemi = new THREE.HemisphereLight('#aebbdd', '#080910', 0.5);
+  // Luzes do hero em contraluz: o busto é recortado por trás e o rosto fica
+  // em meia-luz suave (luz frontal forte revela imperfeições da malha).
+  group.add(new THREE.AmbientLight(0xffffff, 0.16));
+  const hemi = new THREE.HemisphereLight('#aebbdd', '#080910', 0.34);
   group.add(hemi);
 
-  const key = new THREE.SpotLight('#f3ede2', 42, 26, 0.62, 1, 1.45);
-  key.position.set(0.4, 7.2, 1.3);
-  key.target.position.copy(PIVOT);
-  group.add(key, key.target);
+  const rimCool = new THREE.PointLight('#dde6ff', 30, 16, 2);
+  rimCool.position.set(-2.1, 2.7, -2.1);
+  group.add(rimCool);
 
-  const fill = new THREE.PointLight('#8593bb', 9, 18, 2);
+  const rimWarm = new THREE.PointLight('#ffd9a5', 24, 16, 2);
+  rimWarm.position.set(2.3, 1.7, -2.3);
+  group.add(rimWarm);
+
+  const fill = new THREE.PointLight('#8593bb', 5, 18, 2);
   fill.position.set(2.4, 2.2, 5.4);
   group.add(fill);
 
-  const rim = new THREE.PointLight('#7f8fc0', 7, 12, 2);
-  rim.position.set(-1.8, 2.4, -2.6);
-  group.add(rim);
-
-  // Feixe descendo sobre o busto.
-  const shaft = makeShaft({ width: 1.5, length: 11, opacity: 0.14 });
-  shaft.group.position.set(0, 6.6, 0);
-  group.add(shaft.group);
+  // Halo radiante atrás do busto: recorta a silhueta e alimenta o bloom.
+  const haloCanvas = document.createElement('canvas');
+  haloCanvas.width = haloCanvas.height = 256;
+  const hctx = haloCanvas.getContext('2d');
+  const hg = hctx.createRadialGradient(128, 128, 10, 128, 128, 126);
+  hg.addColorStop(0, 'rgba(255, 244, 224, 0.9)');
+  hg.addColorStop(0.35, 'rgba(214, 196, 168, 0.4)');
+  hg.addColorStop(1, 'rgba(20, 20, 24, 0)');
+  hctx.fillStyle = hg;
+  hctx.fillRect(0, 0, 256, 256);
+  const haloTex = new THREE.CanvasTexture(haloCanvas);
+  haloTex.colorSpace = THREE.SRGBColorSpace;
+  const halo = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.6, 3.6),
+    new THREE.MeshBasicMaterial({
+      map: haloTex,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      toneMapped: false,
+      opacity: 0.85,
+    })
+  );
+  halo.position.set(0, 1.3, -1.7);
+  group.add(halo);
 
   // Busto.
   const loader = new GLTFLoader();
@@ -153,12 +173,19 @@ export async function buildHero(tier) {
   const wp = new THREE.Vector3();
   const v1 = new THREE.Vector3();
   const v2 = new THREE.Vector3();
+  const camDir = new THREE.Vector3();
 
   let revealT = 0;
 
   function update(t, dt, camera, heroExit, revealed) {
     ringA.group.rotation.y = t * 0.10;
     ringB.group.rotation.y = -t * 0.075;
+
+    // Halo sempre atrás do busto em relação à câmera.
+    camDir.copy(camera.position).sub(PIVOT).normalize();
+    halo.position.copy(PIVOT).addScaledVector(camDir, -1.7);
+    halo.position.y = 1.3;
+    halo.lookAt(camera.position);
 
     // Entrada suave dos anéis após o reveal do preloader.
     if (revealed && revealT < 1) revealT = Math.min(1, revealT + dt / 1.6);

@@ -18,12 +18,19 @@ export function buildProps() {
   seat.castShadow = true;
   chair.add(seat);
 
-  const back = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.52, 20, 1, true, -0.75, 1.5), leatherMat);
-  back.position.set(-0.2, 0.82, 0);
+  // Encosto curvo apoiado na traseira do assento por duas hastes.
+  const back = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.5, 20, 1, true, -0.7, 1.4), leatherMat);
+  back.position.set(-0.02, 0.84, 0);
   back.rotation.y = Math.PI;
   back.material.side = THREE.DoubleSide;
   back.castShadow = true;
   chair.add(back);
+  for (const dz of [-0.08, 0.08]) {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.17, 8), steelMat);
+    post.position.set(-0.24, 0.56, dz);
+    post.rotation.z = 0.45;
+    chair.add(post);
+  }
 
   const column = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.34, 10), steelMat);
   column.position.y = 0.28;
@@ -38,8 +45,9 @@ export function buildProps() {
     caster.position.set(Math.cos(a) * 0.25, 0.025, Math.sin(a) * 0.25);
     chair.add(caster);
   }
-  chair.position.set(2.12, 0, 0.82);
-  chair.rotation.y = -0.55;
+  // Afastada da mesa: o tampo começa em x 2.11, nada da cadeira o cruza.
+  chair.position.set(1.82, 0, 0.62);
+  chair.rotation.y = -0.5;
   group.add(chair);
 
   // Tapete.
@@ -103,7 +111,7 @@ export function buildProps() {
     group.add(m);
   };
   blob(2.45, 0.45, 1.3, 2.1);      // mesa
-  blob(2.12, 0.82, 0.9, 0.9);      // cadeira
+  blob(1.82, 0.62, 0.9, 0.9);      // cadeira
   blob(-2.55, 1.45, 1.1, 1.2);     // rack
   blob(0.9, 1.9, 1.9, 0.8);        // estante
   blob(-2.66, -0.6, 0.9, 1.7);     // bancada

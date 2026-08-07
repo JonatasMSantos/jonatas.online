@@ -59,14 +59,25 @@ export function buildGuitar() {
     g.add(peg);
   }
 
-  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 0.014), darkMat);
-  bridge.position.set(0, 0.17, 0.108);
+  // Rastilho saliente no tampo e pestana no braço: as cordas descem do
+  // rastilho até a pestana sempre por FORA do corpo e do braço.
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.024, 0.024), darkMat);
+  bridge.position.set(0, 0.165, 0.118);
   g.add(bridge);
+  const nut = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.014), darkMat);
+  nut.position.set(0, 1.03, 0.082);
+  g.add(nut);
 
+  const strFrom = new THREE.Vector3(0, 0.168, 0.132);  // topo do rastilho
+  const strTo = new THREE.Vector3(0, 1.03, 0.09);      // topo da pestana
+  const strDir = strTo.clone().sub(strFrom);
+  const strLen = strDir.length();
+  const strQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), strDir.clone().normalize());
   for (let i = 0; i < 6; i++) {
-    const string = new THREE.Mesh(new THREE.CylinderGeometry(0.0011, 0.0011, 0.87, 4), steelMat);
-    string.position.set(-0.02 + i * 0.008, 0.6, 0.111);
-    string.rotation.x = 0.052;
+    const string = new THREE.Mesh(new THREE.CylinderGeometry(0.0011, 0.0011, strLen, 4), steelMat);
+    string.position.copy(strFrom).addScaledVector(strDir, 0.5);
+    string.position.x = -0.02 + i * 0.008;
+    string.quaternion.copy(strQuat);
     g.add(string);
   }
 
@@ -74,19 +85,25 @@ export function buildGuitar() {
   g.rotation.z = -0.1;
   g.rotation.x = -0.14;
 
-  // Suporte tripé.
-  const legA = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.42, 8), standMat);
-  legA.position.set(-0.1, 0.2, 0.1);
-  legA.rotation.z = 0.5;
-  const legB = legA.clone();
-  legB.position.x = 0.1;
-  legB.rotation.z = -0.5;
-  const legC = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.4, 8), standMat);
-  legC.position.set(0, 0.2, -0.12);
-  legC.rotation.x = -0.55;
-  const hip = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.06), standMat);
-  hip.position.set(0, 0.36, 0.04);
-  group.add(legA, legB, legC, hip);
+  // Suporte: mastro atrás do corpo e dois berços baixos segurando o bojo.
+  // Nada cruza o tampo acima da altura do bojo inferior.
+  const standPole = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.5, 8), standMat);
+  standPole.position.set(0, 0.25, -0.13);
+  standPole.rotation.x = 0.22;
+  group.add(standPole);
+  for (const a of [-0.6, 0.6, Math.PI]) {
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.015, 0.22), standMat);
+    foot.position.set(Math.sin(a) * 0.11, 0.008, -0.18 + Math.cos(a) * 0.11);
+    foot.rotation.y = -a;
+    group.add(foot);
+  }
+  for (const dx of [-1, 1]) {
+    const cradle = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.17, 8), standMat);
+    cradle.position.set(dx * 0.13, 0.07, 0.05);
+    cradle.rotation.z = dx * 1.05;
+    cradle.rotation.x = -0.35;
+    group.add(cradle);
+  }
 
   group.add(g);
   group.position.set(-1.62, 0, -1.62);

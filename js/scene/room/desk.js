@@ -73,31 +73,51 @@ export function buildDesk({ code, term }) {
   mug.castShadow = true;
   group.add(mug);
 
-  // Luminária articulada com poça de luz quente.
+  // Luminária articulada: braços ligando pontos exatos, esferas nas juntas.
   const lampMat = new THREE.MeshStandardMaterial({ color: '#101114', roughness: 0.35, metalness: 0.7 });
-  const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.02, 14), lampMat);
-  lampBase.position.set(2.62, 0.78, 1.28);
-  const arm1 = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.34, 8), lampMat);
-  arm1.position.set(2.6, 0.94, 1.24);
-  arm1.rotation.z = 0.3;
-  const arm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.3, 8), lampMat);
-  arm2.position.set(2.52, 1.1, 1.16);
-  arm2.rotation.set(0.5, 0, -0.9);
-  const head = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.09, 14, 1, true), lampMat);
-  head.position.set(2.44, 1.13, 1.06);
-  head.rotation.set(-0.7, 0, 0.7);
-  group.add(lampBase, arm1, arm2, head);
+  const B = new THREE.Vector3(2.62, 0.785, 1.26);   // topo da base
+  const E = new THREE.Vector3(2.56, 1.06, 1.19);    // cotovelo
+  const H = new THREE.Vector3(2.44, 1.16, 1.02);    // cabeça
+  const T = new THREE.Vector3(2.28, 0.767, 0.72);   // alvo da luz
+
+  const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.022, 14), lampMat);
+  lampBase.position.set(B.x, 0.778, B.z);
+  group.add(lampBase);
+
+  const armBetween = (a, b, r) => {
+    const dir = b.clone().sub(a);
+    const len = dir.length();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 8), lampMat);
+    m.position.copy(a).addScaledVector(dir, 0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+    group.add(m);
+  };
+  armBetween(B, E, 0.009);
+  armBetween(E, H, 0.008);
+  for (const p of [B, E]) {
+    const joint = new THREE.Mesh(new THREE.SphereGeometry(0.016, 10, 10), lampMat);
+    joint.position.copy(p);
+    group.add(joint);
+  }
+
+  const headDir = T.clone().sub(H).normalize();
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.095, 14, 1, true), lampMat);
+  head.material = lampMat.clone();
+  head.material.side = THREE.DoubleSide;
+  head.position.copy(H).addScaledVector(headDir, 0.02);
+  head.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), headDir);
+  group.add(head);
 
   const lampBulb = new THREE.Mesh(
-    new THREE.SphereGeometry(0.018, 10, 10),
+    new THREE.SphereGeometry(0.016, 10, 10),
     new THREE.MeshBasicMaterial({ color: new THREE.Color('#ffd9a5').multiplyScalar(1.6), toneMapped: false })
   );
-  lampBulb.position.copy(head.position);
+  lampBulb.position.copy(H).addScaledVector(headDir, 0.05);
   group.add(lampBulb);
 
   const lampLight = new THREE.SpotLight('#ffd9a5', 4.0, 3.4, 0.75, 0.6, 1.4);
-  lampLight.position.copy(head.position);
-  lampLight.target.position.set(2.3, 0.75, 0.7);
+  lampLight.position.copy(H);
+  lampLight.target.position.copy(T);
   group.add(lampLight, lampLight.target);
 
   const glow = new THREE.PointLight('#9db6ff', 1.6, 2.4, 2);
