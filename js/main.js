@@ -135,9 +135,11 @@ const panels = ROOM_STOPS.map((s) => {
 const diveLine = $('.dive-line');
 
 function updateOverlay(progress, focus) {
-  const bell = Math.pow(Math.sin(Math.PI * progress.dive), 2);
-  diveLine.style.opacity = bell.toFixed(3);
-  diveLine.style.filter = `blur(${((1 - bell) * 10).toFixed(1)}px)`;
+  // Platô de leitura: entra rápido, segura nítida entre 22% e 78%, sai rápido.
+  const p = progress.dive;
+  const vis = Math.min(smoothstep(0.06, 0.22, p), 1 - smoothstep(0.78, 0.94, p));
+  diveLine.style.opacity = vis.toFixed(3);
+  diveLine.style.filter = `blur(${((1 - vis) * 10).toFixed(1)}px)`;
 
   for (let i = 0; i < panels.length; i++) {
     const p = panels[i];

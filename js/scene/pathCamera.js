@@ -157,7 +157,9 @@ export function createCameraRig() {
       // Regime de trilho: mergulho + quarto.
       let u, focus;
       if (pRoom <= 0) {
-        u = easeInOut(pDive) * U_WINDOW_IN;
+        // A câmera desacelera no meio do mergulho, onde a frase está nítida.
+        const slow = 0.5 + 4 * Math.pow(pDive - 0.5, 3);
+        u = easeInOut(lerp(pDive, slow, 0.5)) * U_WINDOW_IN;
         focus = state.focus.fill(0);
       } else {
         const m = roomMap(pRoom);
