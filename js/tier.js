@@ -16,7 +16,7 @@ export const TIER = {
   ...PRESETS[name],
   reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
   pixelRatio: Math.min(Math.max(devicePixelRatio || 1, PRESETS[name].dpr[0]), PRESETS[name].dpr[1]),
-  modelUrl: name === 'mobile' ? 'assets/models/busto-jonatas.min.1k.glb' : 'assets/models/busto-jonatas.min.glb',
+  modelUrl: name === 'mobile' ? 'assets/models/jonatas.min.1k.glb' : 'assets/models/jonatas.min.glb',
 };
 
 document.documentElement.classList.add('tier-' + name);

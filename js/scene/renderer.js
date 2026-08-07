@@ -6,12 +6,11 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-// Vinheta + film grain animado em um único pass, depois do bloom.
+// Vinheta em um único pass, depois do bloom.
 const PostFXShader = {
   uniforms: {
     tDiffuse: { value: null },
     uTime: { value: 0 },
-    uGrain: { value: 0.055 },
     uVignette: { value: 0.42 },
   },
   vertexShader: /* glsl */ `
@@ -24,18 +23,11 @@ const PostFXShader = {
   fragmentShader: /* glsl */ `
     uniform sampler2D tDiffuse;
     uniform float uTime;
-    uniform float uGrain;
     uniform float uVignette;
     varying vec2 vUv;
 
-    float hash(vec2 p) {
-      return fract(sin(dot(p, vec2(12.9898, 78.233)) + uTime) * 43758.5453);
-    }
-
     void main() {
       vec4 color = texture2D(tDiffuse, vUv);
-      float n = hash(vUv * vec2(1920.0, 1080.0)) - 0.5;
-      color.rgb += n * uGrain;
       float d = length(vUv - 0.5);
       color.rgb *= 1.0 - smoothstep(0.42, 0.98, d) * uVignette;
       gl_FragColor = color;

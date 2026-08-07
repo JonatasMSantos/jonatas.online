@@ -65,8 +65,8 @@ section { position: relative; }
   pointer-events: none;
 }
 
-#hero { height: 190vh; }
-#dive { height: 190vh; }
+#hero { height: 155vh; }
+#dive { height: 260vh; }
 #room { height: 460vh; }
 
 html.reduced-motion #hero { height: 120vh; }

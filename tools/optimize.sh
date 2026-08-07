@@ -1,14 +1,14 @@
 #!/bin/bash
 # Pipeline de assets. Rodar uma vez a partir da raiz do repositório.
-# A fonte (busto-jonatas.glb e projetos/) nunca é modificada.
+# A fonte (jonatas.glb e projetos/) nunca é modificada.
 set -euo pipefail
 
-# Busto: variante desktop (~180k tris, texturas WebP 2k) e mobile (~72k tris, 1k)
-npx --yes @gltf-transform/cli optimize busto-jonatas.glb assets/models/busto-jonatas.min.glb \
+# Modelo: variante desktop (~180k tris, texturas WebP 2k) e mobile (~72k tris, 1k)
+npx --yes @gltf-transform/cli optimize jonatas.glb assets/models/jonatas.min.glb \
   --compress meshopt --simplify true --simplify-ratio 0.3 --simplify-error 0.0003 \
   --texture-compress webp --texture-size 2048
 
-npx --yes @gltf-transform/cli optimize busto-jonatas.glb assets/models/busto-jonatas.min.1k.glb \
+npx --yes @gltf-transform/cli optimize jonatas.glb assets/models/jonatas.min.1k.glb \
   --compress meshopt --simplify true --simplify-ratio 0.12 --simplify-error 0.0008 \
   --texture-compress webp --texture-size 1024
 

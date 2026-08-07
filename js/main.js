@@ -147,9 +147,9 @@ const panels = ROOM_STOPS.map((s) => {
 const diveLine = $('.dive-line');
 
 function updateOverlay(progress, focus) {
-  // Platô de leitura: entra rápido, segura nítida entre 22% e 78%, sai rápido.
+  // Platô de leitura: entra cedo, segura nítida por quase todo o mergulho.
   const p = progress.dive;
-  const vis = Math.min(smoothstep(0.06, 0.22, p), 1 - smoothstep(0.78, 0.94, p));
+  const vis = Math.min(smoothstep(0.02, 0.12, p), 1 - smoothstep(0.88, 0.98, p));
   diveLine.style.opacity = vis.toFixed(3);
   diveLine.style.filter = `blur(${((1 - vis) * 10).toFixed(1)}px)`;
 

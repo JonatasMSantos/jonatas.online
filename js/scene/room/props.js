@@ -18,18 +18,23 @@ export function buildProps() {
   seat.castShadow = true;
   chair.add(seat);
 
-  // Encosto curvo apoiado na traseira do assento por duas hastes.
-  const back = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.5, 20, 1, true, -0.7, 1.4), leatherMat);
-  back.position.set(-0.02, 0.84, 0);
-  back.rotation.y = Math.PI;
-  back.material.side = THREE.DoubleSide;
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.48, 0.52), leatherMat);
+  back.position.set(-0.31, 0.74, 0);
+  back.rotation.z = 0.18;
   back.castShadow = true;
   chair.add(back);
+
+  const makeRod = (from, to, radius = 0.011) => {
+    const dir = to.clone().sub(from);
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, dir.length(), 8), steelMat);
+    rod.position.copy(from).add(to).multiplyScalar(0.5);
+    rod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+    rod.castShadow = true;
+    chair.add(rod);
+  };
+
   for (const dz of [-0.08, 0.08]) {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.17, 8), steelMat);
-    post.position.set(-0.24, 0.56, dz);
-    post.rotation.z = 0.45;
-    chair.add(post);
+    makeRod(new THREE.Vector3(-0.18, 0.49, dz), new THREE.Vector3(-0.3, 0.62, dz * 1.35));
   }
 
   const column = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.34, 10), steelMat);
