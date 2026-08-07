@@ -25,6 +25,22 @@
     })();
   </script>
 
+  <script>
+    // Preload do busto em paralelo com o JS do CDN (mesma heurística de tier.js).
+    (function () {
+      var coarse = matchMedia('(hover: none) and (pointer: coarse)').matches;
+      var url = (innerWidth < 768 || coarse)
+        ? 'assets/3dmodels/jonatas.min.1k.glb'
+        : 'assets/3dmodels/jonatas.min.glb';
+      var link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'fetch';
+      link.crossOrigin = 'anonymous';
+      link.href = url;
+      document.head.appendChild(link);
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://api.fontshare.com" />
@@ -53,6 +69,7 @@
       <nav class="nav-links">
         <a href="#hero" data-nav="hero" data-i18n="nav.inicio">Início</a>
         <a href="#room" data-nav="room" data-i18n="nav.sala">Sala</a>
+        <a href="#experience" data-nav="experience" data-i18n="nav.experiencia">Experiência</a>
         <a href="#projects" data-nav="projects" data-i18n="nav.projetos">Projetos</a>
         <a href="#contact" data-nav="contact" data-i18n="nav.contato">Contato</a>
       </nav>
@@ -72,6 +89,7 @@
     <nav>
       <a href="#hero" data-nav="hero" data-i18n="nav.inicio">Início</a>
       <a href="#room" data-nav="room" data-i18n="nav.sala">Sala</a>
+      <a href="#experience" data-nav="experience" data-i18n="nav.experiencia">Experiência</a>
       <a href="#projects" data-nav="projects" data-i18n="nav.projetos">Projetos</a>
       <a href="#contact" data-nav="contact" data-i18n="nav.contato">Contato</a>
     </nav>
@@ -145,11 +163,11 @@
     <section id="experience">
       <div class="experience-container">
         <div class="experience-content">
-          <header class="projects-head" style="margin-bottom: 6vh; padding: 0;">
+          <header class="projects-head">
             <p class="projects-eyebrow" data-i18n="experience.eyebrow">Trajetória</p>
             <h2 class="projects-title" data-i18n="experience.heading">Experiência</h2>
           </header>
-          
+
           <div class="timeline">
             <div class="timeline-item">
               <h3 class="project-name" data-i18n="experience.bradesco.role">Bradesco · Analista de Sistemas Sênior</h3>
@@ -160,7 +178,7 @@
             <div class="timeline-item">
               <h3 class="project-name" data-i18n="experience.memorial.role">Grupo Memorial · de Programador Júnior a Analista Sênior</h3>
               <p class="project-role" data-i18n="experience.memorial.date">mai 2014 a ago 2024 · São Paulo, SP</p>
-              <p class="project-body" style="white-space: pre-wrap;" data-i18n="experience.memorial.body"></p>
+              <p class="project-body" data-i18n="experience.memorial.body"></p>
             </div>
             
             <div class="timeline-item">
@@ -268,6 +286,11 @@
     <span data-i18n="hero.hint">role</span>
     <i class="hint-line"></i>
   </div>
+
+  <button id="next-section" type="button" aria-label="Próxima seção">
+    <span class="next-label"></span>
+    <svg class="next-arrow" viewBox="0 0 22.5 7.364" aria-hidden="true"><path fill="currentColor" d="M22.3536 4.03553C22.5488 3.84027 22.5488 3.52369 22.3536 3.32843L19.1716 0.146447C18.9763 -0.0488155 18.6597 -0.0488155 18.4645 0.146447C18.2692 0.341709 18.2692 0.658291 18.4645 0.853554L21.2929 3.68198L18.4645 6.51041C18.2692 6.70567 18.2692 7.02225 18.4645 7.21751C18.6597 7.41278 18.9763 7.41278 19.1716 7.21751L22.3536 4.03553ZM0 3.68198V4.18198H22V3.68198V3.18198H0V3.68198Z"/></svg>
+  </button>
 
   <div id="cursor" aria-hidden="true"></div>
 

@@ -161,6 +161,13 @@
   align-items: start;
 }
 
+#experience .projects-head {
+  margin-bottom: 6vh;
+  padding: 0;
+}
+
+.timeline-item .project-body { white-space: pre-wrap; }
+
 .timeline {
   display: flex;
   flex-direction: column;
@@ -217,7 +224,11 @@
   width: 100% !important;
   height: 100% !important;
   outline: none;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-entrance);
 }
+
+.experience-media canvas.on { opacity: 1; }
 
 @media (max-width: 1023px) {
   .experience-container {

@@ -66,12 +66,11 @@ section { position: relative; }
 }
 
 #hero { height: 120vh; }
-#dive { height: 260vh; }
-#room { height: 460vh; }
+#dive { height: 160vh; }
+#room { height: 360vh; }
 
-html.reduced-motion #hero { height: 120vh; }
 html.reduced-motion #dive { height: 60vh; }
-html.reduced-motion #room { height: 320vh; }
+html.reduced-motion #room { height: 280vh; }
 
 /* Fallback sem WebGL: tudo legível em fluxo */
 html.no-webgl #gl { display: none; }

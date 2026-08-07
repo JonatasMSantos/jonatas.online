@@ -7,6 +7,8 @@ const resolve = (path, lang) =>
 
 export function getLang() { return current; }
 
+export function t(path) { return resolve(path, current); }
+
 export function apply() {
   const lang = current;
   document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
