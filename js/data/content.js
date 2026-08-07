@@ -11,7 +11,7 @@ export const DICT = {
     hero: {
       kicker: 'Desenvolvedor Fullstack Sênior',
       sub: 'Java e JavaScript. Doze anos construindo sistemas de ponta a ponta, do banco de dados à interface.',
-      hint: 'role para entrar',
+      hint: 'role',
     },
     dive: { line: 'A tecnologia muda. O ofício permanece.' },
     room: {
@@ -85,7 +85,7 @@ export const DICT = {
     hero: {
       kicker: 'Senior Fullstack Developer',
       sub: 'Java and JavaScript. Twelve years building systems end to end, from database to interface.',
-      hint: 'scroll to enter',
+      hint: 'scroll',
     },
     dive: { line: 'Technology changes. Craft remains.' },
     room: {

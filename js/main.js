@@ -121,12 +121,24 @@ preloader.onReveal(() => {
     revealBlock(kicker, { delay: 0, y: 10, blur: 6 });
     revealText(name, { mode: 'letters', stagger: 46, delay: 180 });
     revealText(sub, { mode: 'words', stagger: 34, delay: 700, blur: 8, y: 12, tension: 130 });
-    revealBlock($('.hero-hint'), { delay: 1500, y: 8, blur: 4 });
+    hintRevealAt = performance.now() + 1400;
     revealBlock($('#nav'), { delay: 250, y: -12, blur: 0, tension: 90, friction: 22 });
   }, 60);
 });
 
 // ---------- Painéis das paradas + linha do mergulho ----------
+
+// Dica de rolagem: fixa, visível até o fim da página, some perto do rodapé.
+const hintEl = $('#scroll-hint');
+let hintRevealAt = Infinity;
+
+function updateHint(now) {
+  const entry = clamp01((now - hintRevealAt) / 900);
+  if (entry <= 0) return;
+  const end = document.body.scrollHeight - innerHeight;
+  const nearEnd = 1 - clamp01((end - scrollY - innerHeight * 0.2) / (innerHeight * 0.6));
+  hintEl.style.opacity = (entry * (1 - nearEnd)).toFixed(3);
+}
 
 const panels = ROOM_STOPS.map((s) => {
   const el = $(`.stop-panel[data-stop="${s.id}"]`);
@@ -276,6 +288,7 @@ function frame(now) {
 
   updateNav();
   updateProjects();
+  updateHint(now);
 
   if (!world) {
     updateOverlay(progress, null);

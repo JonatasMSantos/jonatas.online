@@ -83,4 +83,4 @@ html.no-webgl #hero, html.no-webgl #dive, html.no-webgl #room { height: auto; }
 html.no-webgl .pin { position: static; height: auto; overflow: visible; pointer-events: auto; }
 html.no-webgl .stop-panel { position: static !important; opacity: 1 !important; filter: none !important; transform: none !important; margin: 12vh auto; }
 html.no-webgl .hero-copy, html.no-webgl .dive-line { opacity: 1 !important; filter: none !important; transform: none !important; }
-html.no-webgl .hero-hint { display: none; }
+html.no-webgl #scroll-hint { display: none; }
