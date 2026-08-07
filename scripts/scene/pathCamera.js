@@ -8,7 +8,7 @@ const toWorld = ([x, y, z]) => new THREE.Vector3(x, y + ROOM_ORIGIN.y, z);
 
 // Curva mestra: saída do hero, mergulho, janela, seis paradas, pouso final.
 const CONTROL = [
-  new THREE.Vector3(0.0, 2.6, 3.4),
+  new THREE.Vector3(0.0, 1.5, 3.4),
   new THREE.Vector3(0.4, -7.0, 4.4),
   new THREE.Vector3(1.2, -17.0, 0.8),
   new THREE.Vector3(0.8, -25.5, -4.6),

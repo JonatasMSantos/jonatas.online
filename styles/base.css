@@ -65,7 +65,7 @@ section { position: relative; }
   pointer-events: none;
 }
 
-#hero { height: 155vh; }
+#hero { height: 120vh; }
 #dive { height: 260vh; }
 #room { height: 460vh; }
 
