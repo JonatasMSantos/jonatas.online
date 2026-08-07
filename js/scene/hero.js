@@ -95,21 +95,21 @@ export async function buildHero(tier) {
   const hemi = new THREE.HemisphereLight('#aebbdd', '#080910', 0.5);
   group.add(hemi);
 
-  const key = new THREE.SpotLight('#f3ede2', 90, 26, 0.62, 1, 1.45);
+  const key = new THREE.SpotLight('#f3ede2', 42, 26, 0.62, 1, 1.45);
   key.position.set(0.4, 7.2, 1.3);
   key.target.position.copy(PIVOT);
   group.add(key, key.target);
 
-  const fill = new THREE.PointLight('#8593bb', 14, 18, 2);
+  const fill = new THREE.PointLight('#8593bb', 9, 18, 2);
   fill.position.set(2.4, 2.2, 5.4);
   group.add(fill);
 
-  const rim = new THREE.PointLight('#7f8fc0', 10, 12, 2);
+  const rim = new THREE.PointLight('#7f8fc0', 7, 12, 2);
   rim.position.set(-1.8, 2.4, -2.6);
   group.add(rim);
 
   // Feixe descendo sobre o busto.
-  const shaft = makeShaft({ width: 1.5, length: 11, opacity: 0.24 });
+  const shaft = makeShaft({ width: 1.5, length: 11, opacity: 0.14 });
   shaft.group.position.set(0, 6.6, 0);
   group.add(shaft.group);
 
@@ -132,8 +132,8 @@ export async function buildHero(tier) {
     if (o.isMesh) {
       o.frustumCulled = true;
       if (o.material) {
-        o.material.envMapIntensity = 0.6;
-        if (o.material.emissive) o.material.emissiveIntensity = 0.35;
+        o.material.envMapIntensity = 0.45;
+        if (o.material.emissive) o.material.emissiveIntensity = 0.22;
       }
     }
   });
