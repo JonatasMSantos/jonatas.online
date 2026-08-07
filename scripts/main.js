@@ -128,7 +128,7 @@ preloader.onReveal(async () => {
   // Inicializa a cena isolada da seção de experiência
   try {
     const { initExperience3D } = await import('./scene/experience.js');
-    initExperience3D('experience-gl', TIER.modelUrl);
+    initExperience3D('experience-gl', 'boneto-jonatas.glb');
   } catch (err) {
     console.error('Erro ao iniciar modelo 3D da timeline', err);
   }
