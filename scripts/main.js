@@ -143,8 +143,11 @@ if (expMedia) {
     if (!entries.some((e) => e.isIntersecting)) return;
     io.disconnect();
     if (document.documentElement.classList.contains('no-webgl')) return;
+    const expModel = TIER.name === 'mobile'
+      ? 'assets/3dmodels/boneco-jonatas.min.512.glb'
+      : 'assets/3dmodels/boneco-jonatas.min.glb';
     import('./scene/experience.js')
-      .then(({ initExperience3D }) => initExperience3D('experience-gl', 'assets/3dmodels/boneto-jonatas.min.glb', TIER))
+      .then(({ initExperience3D }) => initExperience3D('experience-gl', expModel, TIER))
       .catch((err) => console.error('Erro ao iniciar o modelo 3D da experiência', err));
   }, { rootMargin: '200% 0px' });
   io.observe(expMedia);
