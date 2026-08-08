@@ -75,7 +75,11 @@ function roomMap(p) {
     focus[i] = Math.min(rise, fall);
   }
 
-  return { u, focus };
+  // Trava do olhar na primeira parada: plena da janela até o fim do platô do
+  // arch, caindo junto com o focus dele na viagem para a parada seguinte.
+  const lock = 1 - smoothstep(1.03, 1.26, x);
+
+  return { u, focus, lock };
 }
 
 const tmpAhead = new THREE.Vector3();
@@ -143,7 +147,10 @@ export function createCameraRig() {
       if (dAz > Math.PI) dAz -= Math.PI * 2;
       if (dAz < -Math.PI) dAz += Math.PI * 2;
       const az = az0 + dAz * (1 - exit);
-      const radius = lerp(4.4 - pHero * 0.35, 3.4, exit);
+      // Retrato (celular): órbita mais afastada para busto e anéis caberem
+      // no quadro; converge para o raio do trilho na saída.
+      const fit = camera.aspect < 1 ? Math.min(1.45, 1 + (1 - camera.aspect) * 0.75) : 1;
+      const radius = lerp((4.4 - pHero * 0.35) * fit, 3.4, exit);
       const eyeY = lerp(1.5 + py * 0.45 - pHero * 0.25, CONTROL[0].y, exit);
       const eye = new THREE.Vector3(Math.cos(az) * radius, eyeY, Math.sin(az) * radius);
       const look = heroLook.clone().lerp(exitLook, exit);
@@ -155,16 +162,20 @@ export function createCameraRig() {
       state.inRoom = false;
     } else {
       // Regime de trilho: mergulho + quarto.
-      let u, focus;
+      let u, focus, lock;
       if (pRoom <= 0) {
         // Perfil warp: rápido, quase parada total no platô do texto, rápido.
         const slow = 0.5 + 4 * Math.pow(pDive - 0.5, 3);
         u = easeInOut(lerp(pDive, slow, 0.72)) * U_WINDOW_IN;
         focus = state.focus.fill(0);
+        // Reta final do warp: o olhar converge para o alvo da primeira parada,
+        // então a câmera atravessa a janela já mirando a estante.
+        lock = smoothstep(0.86, 1, pDive);
       } else {
         const m = roomMap(pRoom);
         u = m.u;
         focus = m.focus;
+        lock = m.lock;
         state.focus = focus;
       }
       state.u = u;
@@ -177,12 +188,13 @@ export function createCameraRig() {
       // Início do mergulho: inclina do olhar do hero para o trilho, sem pop.
       const tiltIn = smoothstep(0, 0.14, pDive);
       if (tiltIn < 1 && pRoom <= 0) tmpLook.lerp(exitLook, 1 - tiltIn);
-      let maxF = 0;
       for (let i = 0; i < focus.length; i++) {
-        if (focus[i] > 0.001) {
-          tmpLook.lerp(stopLooks[i], focus[i]);
-          if (focus[i] > maxF) maxF = focus[i];
-          roll += THREE.MathUtils.degToRad(ROOM_STOPS[i].roll) * focus[i];
+        // A primeira parada usa o lock no lugar do rise: sem varredura pelo
+        // quadro na entrada, direto no enquadramento do texto.
+        const f = i === 0 ? Math.max(focus[0], lock) : focus[i];
+        if (f > 0.001) {
+          tmpLook.lerp(stopLooks[i], f);
+          roll += THREE.MathUtils.degToRad(ROOM_STOPS[i].roll) * f;
         }
       }
       // Fim do trilho: o ponto adiante degenera perto de u = 1, então o olhar

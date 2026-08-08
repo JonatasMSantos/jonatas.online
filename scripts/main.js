@@ -20,7 +20,7 @@ function goTo(id) {
   const el = document.getElementById(id);
   if (!el) return;
   wpTarget = -1;
-  window.scrollTo({ top: id === 'hero' ? 0 : el.offsetTop, behavior: TIER.reducedMotion ? 'auto' : 'smooth' });
+  animateScrollTo(id === 'hero' ? 0 : el.offsetTop);
 }
 
 $$('[data-nav]').forEach((a) =>
@@ -311,8 +311,34 @@ const nextWaypoint = () => waypoints.findIndex((w) => w.y > scrollY + 40);
 // Waypoint em voo: cliques rápidos encadeiam para o ponto seguinte em vez
 // de re-mirar o mesmo destino; qualquer scroll manual retoma o controle.
 let wpTarget = -1;
-for (const ev of ['wheel', 'touchstart', 'keydown', 'scrollend']) {
-  addEventListener(ev, () => { wpTarget = -1; }, { passive: true });
+let scrollAnim = 0;
+for (const ev of ['wheel', 'touchstart', 'keydown']) {
+  addEventListener(ev, () => {
+    wpTarget = -1;
+    cancelAnimationFrame(scrollAnim);
+  }, { passive: true });
+}
+
+// Tween próprio de scroll: o smooth nativo é rápido demais para as
+// transições cinematográficas (warp e chegada na janela do quarto).
+// Duração proporcional à distância, com teto.
+function animateScrollTo(top) {
+  cancelAnimationFrame(scrollAnim);
+  if (TIER.reducedMotion) {
+    window.scrollTo(0, top);
+    return;
+  }
+  const from = scrollY;
+  if (Math.abs(top - from) < 1) return;
+  const dur = Math.min(3200, 500 + Math.abs(top - from) * 1.1);
+  const t0 = performance.now();
+  const ease = (k) => k * k * (3 - 2 * k);
+  (function step(now) {
+    const k = Math.min(1, (now - t0) / dur);
+    window.scrollTo(0, Math.round(from + (top - from) * ease(k)));
+    if (k < 1) scrollAnim = requestAnimationFrame(step);
+    else wpTarget = -1;
+  })(t0);
 }
 
 nextBtn.addEventListener('click', () => {
@@ -320,7 +346,7 @@ nextBtn.addEventListener('click', () => {
   if (idx === -1) return;
   if (wpTarget >= idx && wpTarget < waypoints.length - 1) idx = wpTarget + 1;
   wpTarget = idx;
-  window.scrollTo({ top: waypoints[idx].y, behavior: TIER.reducedMotion ? 'auto' : 'smooth' });
+  animateScrollTo(waypoints[idx].y);
 });
 
 function updateNav() {

@@ -142,6 +142,10 @@ export async function buildHero(tier) {
   rings.add(ringA.group, ringB.group);
   group.add(rings);
 
+  // Celular: anéis mais fechados; o offset em y mantém a órbita centrada no rosto.
+  const ringScale = tier.name === 'mobile' ? 0.85 : 1;
+  rings.position.y = PIVOT.y * (1 - ringScale);
+
   const tmpQ = new THREE.Quaternion();
   const tmpQ2 = new THREE.Quaternion();
   const wp = new THREE.Vector3();
@@ -157,7 +161,7 @@ export async function buildHero(tier) {
     // Entrada suave dos anéis após o reveal do preloader.
     if (revealed && revealT < 1) revealT = Math.min(1, revealT + dt / 1.6);
     const fade = revealT * (1 - heroExit);
-    const scale = 1 + heroExit * 0.18;
+    const scale = ringScale * (1 + heroExit * 0.18);
     rings.scale.setScalar(scale);
     ringA.tubeMat.opacity = 0.9 * fade;
     ringB.tubeMat.opacity = 0.9 * fade;
