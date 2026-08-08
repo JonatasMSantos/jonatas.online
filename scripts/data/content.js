@@ -92,6 +92,7 @@ export const DICT = {
     contact: {
       eyebrow: 'Próximo projeto',
       title: 'Vamos conversar',
+      extra: 'Currículo, plataformas favoritas e formulário de contato',
     },
     footer: { line: '© 2026 Jônatas Santos. Feito à mão com Three.js.' },
   },
@@ -186,6 +187,7 @@ export const DICT = {
     contact: {
       eyebrow: 'Next project',
       title: 'Let’s talk',
+      extra: 'Résumé, favorite platforms and contact form',
     },
     footer: { line: '© 2026 Jônatas Santos. Handmade with Three.js.' },
   },

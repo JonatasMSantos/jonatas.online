@@ -457,7 +457,10 @@ function frame(now) {
   hero.group.scale.setScalar(heroScale);
   hero.group.position.y = hero.pivot.y * (1 - heroScale);
   const heroVisible = camera.position.y > -13 && vanish < 0.999;
-  const roomVisible = camera.position.y < -5;
+  // O quarto só entra em cena quando a câmera desce à altura do teto
+  // (topo em y ≈ -28.45): antes disso o telhado e as luzes internas
+  // apareceriam ao fundo do warp, quebrando o vazio espacial.
+  const roomVisible = camera.position.y < -27.5;
   hero.group.visible = heroVisible;
   room.group.visible = roomVisible;
   dust[0].visible = heroVisible;
