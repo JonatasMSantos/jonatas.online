@@ -18,7 +18,9 @@ export function measure() {
 
 function local(id, y) {
   const s = sections[id];
-  const span = Math.max(1, s.height - innerHeight);
+  // O progresso completa exatamente onde a seção seguinte começa: sem
+  // zona morta de scroll entre as fases da cena.
+  const span = Math.max(1, s.height);
   return clamp01((y - s.top) / span);
 }
 

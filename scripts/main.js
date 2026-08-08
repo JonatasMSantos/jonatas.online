@@ -19,6 +19,7 @@ initCursor();
 function goTo(id) {
   const el = document.getElementById(id);
   if (!el) return;
+  wpTarget = -1;
   window.scrollTo({ top: id === 'hero' ? 0 : el.offsetTop, behavior: TIER.reducedMotion ? 'auto' : 'smooth' });
 }
 
@@ -39,13 +40,14 @@ let world = null;   // { renderer, scene, camera, composer, bloom, rig, hero, ro
 let revealed = false;
 
 async function initScene() {
-  const [THREE, rendererMod, backdropMod, heroMod, roomMod, pathMod] = await Promise.all([
+  const [THREE, rendererMod, backdropMod, heroMod, roomMod, pathMod, warpMod] = await Promise.all([
     import('three'),
     import('./scene/renderer.js'),
     import('./scene/backdrop.js'),
     import('./scene/hero.js'),
     import('./scene/room/index.js'),
     import('./scene/pathCamera.js'),
+    import('./scene/warp.js'),
   ]);
 
   // Labels e texturas tipográficas dependem das fontes.
@@ -82,6 +84,10 @@ async function initScene() {
 
   const rig = pathMod.createCameraRig();
 
+  // Túnel de velocidade da luz do mergulho (dispensável com reduced motion).
+  const warp = TIER.reducedMotion ? null : warpMod.makeWarp(TIER.name === 'mobile' ? 420 : 700);
+  if (warp) scene.add(warp.mesh);
+
   // Aquecimento: compila tudo e renderiza frames reais antes do reveal.
   // Um frame de dentro do quarto força o upload das texturas dele para a
   // GPU (senão o frustum culling adia o upload e a entrada na sala engasga).
@@ -98,7 +104,7 @@ async function initScene() {
   camera.lookAt(0, 1.12, 0);
   for (let i = 0; i < 2; i++) ctx.composer.render();
 
-  world = { ...ctx, THREE, rig, hero, room, backdrop, dust: [dustHero, dustDive, dustRoom] };
+  world = { ...ctx, THREE, rig, hero, room, backdrop, warp, dust: [dustHero, dustDive, dustRoom] };
   preloader.ready();
 }
 
@@ -164,12 +170,24 @@ const panels = ROOM_STOPS.map((s) => {
 });
 const diveLine = $('.dive-line');
 
+// Velocidade do warp: acelera saindo do hero, quase para no platô do texto,
+// acelera de novo rumo à janela do quarto. Compartilhada com o efeito 3D.
+function warpSpeedAt(p) {
+  const bellMid = Math.exp(-Math.pow((p - 0.5) / 0.14, 2));
+  return smoothstep(0.03, 0.2, p) * (1 - smoothstep(0.8, 0.96, p)) * (1 - bellMid);
+}
+
 function updateOverlay(progress, focus) {
-  // Platô de leitura: entra cedo, segura nítida por quase todo o mergulho.
+  // Viagem até o texto: a frase fica no mesmo lugar e a escala cresce como
+  // 1/distância (longe e pequena -> nítida no platô -> passa por nós e some).
   const p = progress.dive;
-  const vis = Math.min(smoothstep(0.02, 0.12, p), 1 - smoothstep(0.88, 0.98, p));
+  const approach = smoothstep(0.08, 0.45, p);
+  const depart = smoothstep(0.62, 0.82, p);
+  const dist = Math.pow(16, 1 - approach) * Math.pow(0.24, depart);
+  const vis = Math.min(smoothstep(0.12, 0.32, p), 1 - smoothstep(0.6, 0.78, p));
   diveLine.style.opacity = vis.toFixed(3);
-  diveLine.style.filter = `blur(${((1 - vis) * 10).toFixed(1)}px)`;
+  diveLine.style.transform = `translate(-50%, -50%) scale(${(1 / dist).toFixed(4)})`;
+  diveLine.style.filter = `blur(${((1 - vis) * 8).toFixed(1)}px)`;
 
   for (let i = 0; i < panels.length; i++) {
     const p = panels[i];
@@ -249,18 +267,60 @@ if (TIER.fine) {
   });
 }
 
-// ---------- Nav ativa + botão de próxima seção ----------
+// ---------- Nav ativa + botão de próximo ponto ----------
 
 const NAV_ORDER = ['hero', 'room', 'experience', 'projects', 'contact'];
-const NAV_KEY = { hero: 'inicio', room: 'sala', experience: 'experiencia', projects: 'projetos', contact: 'contato' };
 const navLinks = $$('.nav-links a');
 const nextBtn = $('#next-section');
 const nextLabel = nextBtn.querySelector('.next-label');
 let activeSection = '';
 let nextState = null;
 
+// A seta percorre os pontos-chave do tour, não só as seções: texto do
+// mergulho, janela do quarto, cada parada da sala e então as seções DOM.
+const ROOM_UNITS = ROOM_STOPS.length + 0.6; // mesmo mapeamento do pathCamera
+let waypoints = [];
+
+function measureWaypoints() {
+  const el = (id) => document.getElementById(id);
+  const dive = el('dive');
+  const room = el('room');
+  // Rótulo da parada: kicker sem a numeração ("01 · Arquitetura" -> "Arquitetura").
+  const stopLabel = (id) => () => {
+    const k = t(`room.${id}.kicker`);
+    return (k.split('·')[1] || k).trim();
+  };
+  waypoints = [
+    // Platô do texto do mergulho (centro do dive).
+    { y: Math.round(dive.offsetTop + dive.offsetHeight * 0.5), label: () => t('next.dive') },
+    // Chegada na janela do quarto.
+    { y: room.offsetTop, label: () => t('nav.sala') },
+    // Centro do platô de cada parada da sala.
+    ...ROOM_STOPS.map((s, i) => ({
+      y: Math.round(room.offsetTop + ((i + 1 - s.dwell / 2) / ROOM_UNITS) * room.offsetHeight),
+      label: stopLabel(s.id),
+    })),
+    { y: el('experience').offsetTop, label: () => t('nav.experiencia') },
+    { y: el('projects').offsetTop, label: () => t('nav.projetos') },
+    { y: el('contact').offsetTop, label: () => t('nav.contato') },
+  ];
+}
+
+const nextWaypoint = () => waypoints.findIndex((w) => w.y > scrollY + 40);
+
+// Waypoint em voo: cliques rápidos encadeiam para o ponto seguinte em vez
+// de re-mirar o mesmo destino; qualquer scroll manual retoma o controle.
+let wpTarget = -1;
+for (const ev of ['wheel', 'touchstart', 'keydown', 'scrollend']) {
+  addEventListener(ev, () => { wpTarget = -1; }, { passive: true });
+}
+
 nextBtn.addEventListener('click', () => {
-  if (nextBtn.dataset.next) goTo(nextBtn.dataset.next);
+  let idx = nextWaypoint();
+  if (idx === -1) return;
+  if (wpTarget >= idx && wpTarget < waypoints.length - 1) idx = wpTarget + 1;
+  wpTarget = idx;
+  window.scrollTo({ top: waypoints[idx].y, behavior: TIER.reducedMotion ? 'auto' : 'smooth' });
 });
 
 function updateNav() {
@@ -274,14 +334,13 @@ function updateNav() {
     navLinks.forEach((a) => a.classList.toggle('active', a.dataset.nav === active));
   }
 
-  // O botão aponta sempre para a seção seguinte; some na última.
-  const next = NAV_ORDER[NAV_ORDER.indexOf(active) + 1] || '';
-  const label = next && t('nav.' + NAV_KEY[next]);
+  // O botão aponta sempre para o próximo ponto-chave; some no último.
+  const idx = nextWaypoint();
+  const label = idx === -1 ? '' : waypoints[idx].label();
   if (label !== nextState) {
     nextState = label;
-    nextBtn.classList.toggle('gone', !next);
-    nextBtn.dataset.next = next;
-    if (next) {
+    nextBtn.classList.toggle('gone', !label);
+    if (label) {
       nextLabel.textContent = label;
       nextBtn.setAttribute('aria-label', `${t('next.aria')}: ${label}`);
     }
@@ -310,6 +369,7 @@ addEventListener('resize', () => {
     lastW = innerWidth;
     scroll.measure();
     measureProjects();
+    measureWaypoints();
     if (world) world.resize();
   }, 140);
 });
@@ -318,6 +378,7 @@ addEventListener('resize', () => {
 
 scroll.measure();
 measureProjects();
+measureWaypoints();
 
 let lastT = performance.now();
 let acc = 0;
@@ -360,7 +421,13 @@ function frame(now) {
   }
 
   const t = now / 1000;
-  const heroVisible = camera.position.y > -13;
+  // O busto implode em direção ao próprio centro assim que o warp começa:
+  // a viagem acontece "no mesmo lugar", sem sobrevoo do modelo.
+  const vanish = smoothstep(0.02, 0.18, progress.dive);
+  const heroScale = Math.max(0.001, 1 - vanish);
+  hero.group.scale.setScalar(heroScale);
+  hero.group.position.y = hero.pivot.y * (1 - heroScale);
+  const heroVisible = camera.position.y > -13 && vanish < 0.999;
   const roomVisible = camera.position.y < -5;
   hero.group.visible = heroVisible;
   room.group.visible = roomVisible;
@@ -373,6 +440,8 @@ function frame(now) {
   world.scene.fog.density = 0.03 + bell * 0.055 - smoothstep(0, 0.2, progress.room) * 0.012;
 
   backdrop.position.copy(camera.position);
+
+  if (world.warp) world.warp.update(camera, progress.dive, warpSpeedAt(progress.dive), t);
 
   const heroExit = smoothstep(0.55, 0.98, progress.hero);
   hero.update(t, dt, camera, heroExit, revealed);

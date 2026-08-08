@@ -2,9 +2,11 @@
 // cam: posição da câmera; look: ponto focal; roll em graus; dwell: fração do
 // span da parada em platô (câmera parada, copy legível).
 
+// A entrada pela janela segue direto para a estante (arch): sem parada no quadro.
+// O dwell alto do arch faz o texto subir desde o primeiro pixel de scroll do
+// quarto — a sala já abre em "Decisões que envelhecem bem".
 export const ROOM_STOPS = [
-  { id: 'intro',     cam: [-0.3, 1.55, -0.4], look: [-0.75, 1.6, 2.06],  roll: -1.0, dwell: 0.52 },
-  { id: 'arch',      cam: [0.30, 1.55, -0.4], look: [0.9, 1.15, 1.95],  roll: 1.6,  dwell: 0.52 },
+  { id: 'arch',      cam: [0.30, 1.55, -0.4], look: [0.9, 1.15, 1.95],  roll: 1.6,  dwell: 0.74 },
   { id: 'fullstack', cam: [0.0, 1.55, -0.15], look: [2.35, 1.08, 0.30], roll: -1.6, dwell: 0.52 },
   { id: 'ai',        cam: [1.15, 1.42, 1.05], look: [2.42, 1.12, 0.70], roll: 1.4,  dwell: 0.52 },
   { id: 'infra',     cam: [-0.75, 1.5, 0.30], look: [-2.5, 1.15, 1.45], roll: -1.8, dwell: 0.52 },

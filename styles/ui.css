@@ -258,7 +258,7 @@ html.tier-mobile #next-section {
   max-width: 34rem;
   color: var(--ink);
   opacity: 0;
-  will-change: opacity, filter;
+  will-change: opacity, filter, transform;
 }
 
 /* ---------- Painéis das paradas ---------- */
