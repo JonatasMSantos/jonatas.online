@@ -35,6 +35,10 @@ const FINISHES = {
 const BAND_COLUMNS = [0, 0.07, 0.93, 1];
 const BAND_BEND = [-0.95, -0.28, 0.28, 0.95];
 const FLIP_SPIN = 9;
+const DEFAULT_DOWN = new THREE.Vector3(0, -1, 0);
+const TILT_MAX = (65 * Math.PI) / 180;
+const TILT_DEPTH = 0.35;
+const TILT_RESPONSE = 8;
 
 const FOIL_VERTEX_HEAD = `
 varying vec2 vFoilUv;
@@ -625,7 +629,7 @@ const stepSimulation = (sim, dt, physics, time) => {
   for (let s = 0; s < steps; s++) {
     for (let i = 1; i < JOINTS; i++) {
       const v = velocities[i];
-      v.y -= physics.gravity * h;
+      v.addScaledVector(physics.down, physics.gravity * h);
       v.x += windX * h;
       v.z += windZ * h;
       previous[i].copy(nodes[i]);
@@ -657,7 +661,7 @@ const stepSimulation = (sim, dt, physics, time) => {
       const spin = body.angular.dot(up);
       body.angular.addScaledVector(up, (physics.twist * (sim.turn - sim.twist) - physics.twistDamping * spin) * h);
     }
-    body.velocity.y -= physics.gravity * h;
+    body.velocity.addScaledVector(physics.down, physics.gravity * h);
     body.velocity.x += windX * 0.35 * h;
     body.velocity.z += windZ * 0.35 * h;
     body.position.addScaledVector(body.velocity, h);
@@ -717,6 +721,7 @@ const Lanyard = ({
   strapWidth = 0.65,
   metal = 'silver',
   gravity = 1,
+  tilt = false,
   damping = 0.5,
   elasticity = 0.5,
   breeze = 0.5,
@@ -745,6 +750,7 @@ const Lanyard = ({
     strapWidth,
     metal,
     gravity,
+    tilt,
     damping,
     elasticity,
     breeze,
@@ -880,6 +886,8 @@ const Lanyard = ({
     let hovering = false;
     let press = null;
     let imageToken = 0;
+    const down = DEFAULT_DOWN.clone();
+    const tiltTarget = DEFAULT_DOWN.clone();
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
     const paintFaces = () => {
@@ -1124,7 +1132,8 @@ const Lanyard = ({
         twistDamping: 3,
         grip: 40,
         gripDamping: 6,
-        breeze: reducedMotion ? 0 : clamp(s.breeze, 0, 1)
+        breeze: reducedMotion ? 0 : clamp(s.breeze, 0, 1),
+        down
       };
     };
 
@@ -1134,6 +1143,8 @@ const Lanyard = ({
       const dt = Math.min(1 / 30, Math.max(1 / 240, (now - last) / 1000));
       last = now;
       time += dt;
+      const target = settingsRef.current.tilt ? tiltTarget : DEFAULT_DOWN;
+      down.lerp(target, 1 - Math.exp(-TILT_RESPONSE * dt)).normalize();
       const current = physics();
       stepSimulation(sim, dt, current, time);
       const body = sim.body;
@@ -1142,7 +1153,7 @@ const Lanyard = ({
         placeHanging(sim, layout, false);
       }
       render();
-      const resting = sim.calm > 1.2 && !sim.grab && current.breeze === 0;
+      const resting = sim.calm > 1.2 && !sim.grab && current.breeze === 0 && down.distanceToSquared(target) < 1e-6;
       if (visible && !resting) raf = requestAnimationFrame(tick);
     };
 
@@ -1243,6 +1254,35 @@ const Lanyard = ({
     canvas.addEventListener('lostpointercapture', onPointerUp);
     canvas.addEventListener('touchstart', onTouchStart, { passive: false });
 
+    // Inclinação do aparelho: converte beta/gamma no vetor da gravidade
+    // no referencial da tela, para o crachá pender para o lado em que o
+    // celular está inclinado.
+    const onOrientation = event => {
+      if (!settingsRef.current.tilt || event.beta == null || event.gamma == null) return;
+      const beta = (event.beta * Math.PI) / 180;
+      const gamma = (event.gamma * Math.PI) / 180;
+      const gx = Math.cos(beta) * Math.sin(gamma);
+      const gy = -Math.sin(beta);
+      const gz = -Math.cos(beta) * Math.cos(gamma);
+      const angle = (((screen.orientation?.angle ?? window.orientation) || 0) * Math.PI) / 180;
+      const sx = gx * Math.cos(angle) - gy * Math.sin(angle);
+      const sy = gx * Math.sin(angle) + gy * Math.cos(angle);
+      // Com o celular deitado o componente no plano da tela some: volta para
+      // "para baixo" e limita o ângulo para o crachá não subir acima do cordão.
+      const planar = Math.hypot(sx, sy);
+      const swing = clamp(Math.atan2(sx, -sy), -TILT_MAX, TILT_MAX) * clamp(planar * 2, 0, 1);
+      tiltTarget.set(Math.sin(swing), -Math.cos(swing), clamp(gz, -1, 1) * TILT_DEPTH).normalize();
+      if (down.distanceToSquared(tiltTarget) > 4e-4) start();
+    };
+    // iOS só libera o sensor depois de um gesto do usuário.
+    const askMotion = () => {
+      if (!settingsRef.current.tilt) return;
+      window.DeviceOrientationEvent.requestPermission().catch(() => {});
+    };
+    const needsPermission = typeof window.DeviceOrientationEvent?.requestPermission === 'function';
+    window.addEventListener('deviceorientation', onOrientation);
+    if (needsPermission) window.addEventListener('touchend', askMotion, { once: true });
+
     const resize = () => {
       view.width = Math.max(1, container.clientWidth);
       view.height = Math.max(1, container.clientHeight);
@@ -1274,6 +1314,8 @@ const Lanyard = ({
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('deviceorientation', onOrientation);
+      window.removeEventListener('touchend', askMotion);
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerup', onPointerUp);
