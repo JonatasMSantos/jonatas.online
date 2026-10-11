@@ -1,0 +1,752 @@
+/* Desktop: macOS por cima do papel de parede do Windows XP. */
+
+:root {
+  --menubar-h: 28px;
+  --accent: #0455bf;
+  --ink: #1d1d1f;
+  --ink-soft: #6e6e73;
+  --window-bg: rgba(251, 251, 253, 0.94);
+  --window-edge: rgba(0, 0, 0, 0.16);
+  --font-ui: 'Geist Variable', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background: #3a6ea5;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+.desktop {
+  position: fixed;
+  inset: 0;
+  font-family: var(--font-ui);
+}
+
+/* Papel de parede */
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #3a6ea5 url('/img/windows-xp.webp') center / cover no-repeat;
+}
+
+.wallpaper-fill {
+  width: 100%;
+  height: 100%;
+}
+
+/* Crachá */
+.badge-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: min(44vw, 560px);
+  height: 100dvh;
+}
+
+/* Atalhos do desktop */
+.desktop-icons {
+  position: fixed;
+  top: calc(var(--menubar-h) + 16px);
+  right: 16px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 96px;
+  padding: 8px 4px 6px;
+  border-radius: 10px;
+  cursor: default;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.desktop-icon:active .app-icon {
+  filter: brightness(0.85);
+}
+
+.desktop-folder {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 64px;
+}
+
+.desktop-label {
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1.25;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+}
+
+.desktop-icon:focus-visible .desktop-label {
+  background: #0a64d8;
+  text-shadow: none;
+}
+
+.desktop-hint {
+  position: fixed;
+  right: 20px;
+  bottom: 96px;
+  z-index: 6;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+/* Ícone de app */
+.app-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  border-radius: 23%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.28);
+}
+
+/* Barra de menus */
+.menubar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--menubar-h);
+  padding: 0 10px;
+  background: rgba(246, 246, 248, 0.55);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  backdrop-filter: blur(24px) saturate(1.8);
+  color: var(--ink);
+  font-size: 13px;
+  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.12);
+  user-select: none;
+}
+
+.menubar-left,
+.menubar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.menubar-logo {
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 4px;
+}
+
+.menubar-app {
+  padding: 0 8px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.menubar-item {
+  padding: 2px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.menubar-button {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: default;
+}
+
+.menubar-button:hover,
+.menubar-button:focus-visible {
+  background: rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+/* Janelas */
+.windows {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--window-bg);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  backdrop-filter: blur(30px) saturate(1.6);
+  box-shadow:
+    0 0 0 0.5px var(--window-edge),
+    0 22px 70px -10px rgba(0, 0, 0, 0.45),
+    0 8px 20px -8px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  animation: window-in 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s ease;
+}
+
+.window:not([data-focused]) {
+  box-shadow:
+    0 0 0 0.5px var(--window-edge),
+    0 12px 36px -12px rgba(0, 0, 0, 0.35);
+}
+
+.window[data-minimized] {
+  opacity: 0;
+  scale: 0.6;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    scale 0.25s ease,
+    visibility 0s 0.25s;
+}
+
+.window[data-zoomed] {
+  inset: var(--menubar-h) 0 0 0;
+  border-radius: 0;
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+.window-bar {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: 40px;
+  padding: 0 14px;
+  user-select: none;
+  touch-action: none;
+  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.window-lights {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+}
+
+.light {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+  cursor: default;
+}
+
+.light-close {
+  background: #ff5f57;
+}
+
+.light-min {
+  background: #febc2e;
+}
+
+.light-zoom {
+  background: #28c840;
+}
+
+.window:not([data-focused]) .light {
+  background: #d4d4d8;
+}
+
+.window-title {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: #4b4b52;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.window-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 24px 28px;
+}
+
+.window-body-flush {
+  overflow: hidden;
+  padding: 0;
+}
+
+.window-body-terminal {
+  padding: 14px 18px;
+  background: #1c1c20;
+  color: #e7e7ea;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.window-loading {
+  height: 100%;
+  min-height: 120px;
+}
+
+/* Dock */
+.dock-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+}
+
+.dock-layer .dock {
+  pointer-events: auto;
+}
+
+/* Tipografia comum dos apps */
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.small {
+  font-size: 12.5px;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pill-link:hover {
+  filter: brightness(1.1);
+}
+
+/* Sobre mim */
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about-head h3 {
+  margin: 0 0 2px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.about-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #2f80ed, var(--accent));
+  object-fit: cover;
+  object-position: top;
+}
+
+.about-sub {
+  margin: 0;
+  font-size: 16px;
+}
+
+.about-section h4 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.about-section p {
+  margin: 0;
+  color: #3a3a3f;
+}
+
+.about-line {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* Projetos */
+.projects {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 28px;
+  height: 100%;
+}
+
+.projects-stack {
+  position: relative;
+  min-height: 300px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+
+.project-card-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  color: #3a3a3f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.project-card-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.project-card img {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: top;
+}
+
+.projects-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  animation: fade-up 0.35s ease;
+}
+
+.projects-info h3 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.projects-info p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Busto 3D */
+.bust {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 35%, #ffffff 0%, #e9ecf2 70%);
+}
+
+.bust-hint,
+.skills-hint {
+  position: absolute;
+  right: 0;
+  bottom: 14px;
+  left: 0;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Skills */
+.skills-hint {
+  top: 14px;
+  bottom: auto;
+}
+
+.skills {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fbfbfd;
+  font-weight: 550;
+}
+
+/* Terminal */
+.terminal {
+  min-height: 100%;
+  cursor: text;
+}
+
+.terminal p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.terminal-entry {
+  margin-top: 10px;
+}
+
+.terminal-prompt {
+  color: #7ee787;
+}
+
+.terminal-role {
+  color: #79c0ff;
+  font-weight: 700;
+}
+
+.terminal-date {
+  color: #8b8b93;
+}
+
+.terminal-blank {
+  height: 0.8em;
+}
+
+.terminal-row {
+  display: grid;
+  grid-template-columns: minmax(12ch, max-content) 1fr;
+  gap: 2ch;
+}
+
+.terminal-key {
+  color: #e3b341;
+}
+
+.terminal-link {
+  color: #a5d6ff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.terminal-input-row {
+  display: flex;
+  gap: 1ch;
+  margin-top: 10px;
+}
+
+.terminal-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  caret-color: #7ee787;
+}
+
+/* Contato */
+.contact h3 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.contact > p {
+  margin: 0;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-list a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 6px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.contact-list li + li a {
+  box-shadow: inset 0 0.5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.contact-list a:hover {
+  background: rgba(4, 85, 191, 0.07);
+}
+
+.contact-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.contact-label {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.contact-arrow {
+  color: var(--ink-soft);
+}
+
+/* Celular: crachá no topo, atalhos em linha, janelas em tela cheia. */
+@media (max-width: 767px) {
+  .badge-layer {
+    width: 100%;
+    height: 64dvh;
+  }
+
+  .desktop-icons {
+    top: auto;
+    right: 0;
+    bottom: 92px;
+    left: 0;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .desktop-icon {
+    width: 82px;
+  }
+
+  .desktop-hint,
+  .menubar-hide-sm,
+  .light-zoom {
+    display: none;
+  }
+
+  .window,
+  .window[data-zoomed] {
+    inset: calc(var(--menubar-h) + 6px) 6px 0 6px;
+    width: auto !important;
+    height: auto !important;
+    transform: none !important;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .window-bar {
+    touch-action: auto;
+  }
+
+  .window-body {
+    padding: 20px 18px 110px;
+  }
+
+  .window-body-flush {
+    padding: 0 0 90px;
+  }
+
+  .terminal-input {
+    font-size: 16px;
+  }
+
+  .terminal-row {
+    grid-template-columns: 11ch 1fr;
+    gap: 1ch;
+  }
+
+  .projects {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    height: auto;
+  }
+
+  .projects-stack {
+    min-height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window,
+  .projects-info,
+  .terminal-entry {
+    animation: none;
+  }
+}

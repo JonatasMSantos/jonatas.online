@@ -1,7 +1,10 @@
-.git
-projetos
-busto-jonatas.glb
-tools
-JONATAS.txt
 node_modules
+dist
+.git
+.claude
+.mcp.json
+.DS_Store
+projetos
+assets-src
+JONATAS.txt
 *.md

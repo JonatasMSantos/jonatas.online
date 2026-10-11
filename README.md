@@ -1,42 +1,55 @@
 # jonatas.online
 
-Portfólio 3D de Jônatas Santos, Desenvolvedor Fullstack Sênior (Java e JavaScript).
+Portfólio de Jônatas Santos, Desenvolvedor Fullstack Sênior (Java e JavaScript).
 
-Uma única cena WebGL contínua: o busto 3D com as skills orbitando, um mergulho vertical
-pela escuridão e a entrada pela janela de um quarto construído inteiramente em código,
-onde cada objeto conta uma parte da trajetória. Scroll dirige a câmera; tudo é
-função pura da posição, então o caminho é reversível.
+Um desktop de macOS com o papel de parede clássico do Windows XP. Ao abrir, um crachá
+cai pendurado na tela; os atalhos abrem janelas arrastáveis com os projetos, o busto 3D,
+as skills caindo letra por letra e a experiência num terminal.
+
+A versão anterior (cena 3D com scroll) está na tag `v1`.
 
 ## Stack
 
-- HTML, CSS e JavaScript puros, sem build e sem framework
-- Three.js 0.180.0 via importmap CDN (meshopt para o busto, pós-processamento com bloom, vinheta e grain)
+- Vite + React (JS) + Tailwind v4 + shadcn
+- Componentes do [React Bits](https://reactbits.dev) via registry `@react-bits` do shadcn:
+  Lanyard (crachá), CardSwap (projetos), ModelViewer (busto), FallingText (skills),
+  Dock, Folder, TextType (terminal) e ClickSpark (cliques no papel de parede)
 - i18n PT-BR e EN com persistência em localStorage
-- Deploy: Docker + nginx (Railway)
+- Deploy: Docker (build do Vite) + nginx no Railway
 
 ## Rodar localmente
 
 ```bash
-npx http-server -p 8080 -c-1
-# http://localhost:8080          site
-# http://localhost:8080/?debug   overlay de fps, draw calls e progresso
+npm install
+npm run dev
 ```
+
+## Adicionar componentes do React Bits
+
+```bash
+npx shadcn@latest add @react-bits/NomeDoComponente-JS-CSS
+```
+
+O MCP do shadcn está em `.mcp.json` (`npx shadcn@latest mcp init --client claude`).
 
 ## Estrutura
 
 ```
-index.html            página única com todas as seções
-css/                  base, ui (nav, preloader, painéis), sections (projetos, contato)
-js/                   scroll, springs, i18n, preloader, cursor, reveal
-js/scene/             renderer + post chain, backdrop, hero, câmera em trilho
-js/scene/room/        quarto procedural: casca, mesa, rack, estante, bancada, violão
-js/data/              todo o copy (pt/en), paradas do tour, skills dos anéis
-assets/               busto otimizado (meshopt) e screenshots em WebP
-deploy/               Dockerfile + nginx.conf (porta via $PORT, MIME de .glb)
-tools/optimize.sh     pipeline de otimização dos assets (rodar uma vez)
+src/App.jsx                 desktop: gerenciador de janelas, atalhos, Dock
+src/components/             componentes do React Bits (instalados pelo shadcn)
+src/components/desktop/     barra de menus, janela, ícone de app, crachá
+src/apps/                   conteúdo de cada janela + registry (ícones, tamanhos)
+src/data/content.js         todo o copy (pt/en), projetos, skills, links
+src/lib/badge.js            gera frente, verso e alça do crachá em canvas
+src/lib/i18n.jsx            contexto de idioma
+src/styles/desktop.css      estilos do desktop e dos apps
+public/                     papel de parede, foto, logos, screenshots, busto .glb
+assets-src/                 originais pesados (não vão para o build)
+deploy/                     Dockerfile multi-stage + nginx.conf
 ```
 
 ## Deploy no Railway
 
-O `railway.json` aponta para `deploy/Dockerfile`. O nginx escuta em `$PORT`,
-serve `assets/` com cache imutável e `index.html` com no-cache.
+O `railway.json` aponta para `deploy/Dockerfile`, que roda o build do Vite e serve o
+`dist/` com nginx em `$PORT`. Bundles em `/assets/` têm cache imutável e o
+`index.html` vai sem cache.
