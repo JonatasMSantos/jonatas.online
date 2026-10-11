@@ -51,6 +51,7 @@ export const SKILLS = [
   'Jenkins',
   'CI/CD',
   'Cloudflare',
+  'Azure',
   'BullMQ',
   'Monorepos',
   'DDD',
